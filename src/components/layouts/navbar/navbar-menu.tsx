@@ -17,7 +17,7 @@ import { menu, room } from "@/configs/constant";
 
 function NavbarMenu() {
   return (
-    <NavigationMenu>
+    <NavigationMenu className="hidden md:block">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>ห้องพัก</NavigationMenuTrigger>
