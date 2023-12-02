@@ -4,6 +4,7 @@ import PageWrapper from "@/components/wrapper/page-wrapper";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import RoomCard from "@/components/room-card";
+import Footer from "@/components/layouts/footer/footer";
 
 type Room = {
   price: number;
@@ -11,8 +12,6 @@ type Room = {
   image: string;
   slug: string;
 };
-
-// TODO: เพิ่มข้อมูลห้องที่ 4
 
 const rooms: Room[] = [
   {
@@ -32,6 +31,12 @@ const rooms: Room[] = [
     price: 3000,
     image: "/assets/rooms/room3.jpg",
     slug: "family-room",
+  },
+  {
+    name: "POOL SUITE",
+    price: 4000,
+    image: "/assets/rooms/room4.2.jpg",
+    slug: "pool-suite",
   },
 ];
 
