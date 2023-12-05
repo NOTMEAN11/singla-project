@@ -5,11 +5,19 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import RoomCard from "@/components/room-card";
 import Footer from "@/components/layouts/footer/footer";
+import ContainerWrapper from "@/components/wrapper/container-wrapper";
+import Accordions from "@/components/accordions";
 
 type Room = {
   price: number;
   name: string;
   image: string;
+  slug: string;
+};
+
+type faqs = {
+  title: string;
+  content: string;
   slug: string;
 };
 
@@ -40,53 +48,88 @@ const rooms: Room[] = [
   },
 ];
 
+const Faq: faqs[] = [
+  {
+    title:
+      "SINGLA รีสอร์ท สามารถเลื่อนการเข้าพักได้หรือไม่? มีค่าใช้จ่ายเพิ่มเติมหรือไม่?",
+    content:
+      "หากคุณทำการจองผ่านเว็บไซด์ของรีสอร์ท คุณสามารถเลื่อนวันเข้าพักผ่านเว็บไซด์ของรีสอร์ทได้ ขึ้นอยู่กับข้อกำหนดและเงื่อนไขของโปรโมชั่นที่ระบุในการจองของคุณ สำหรับการจองผ่านช่องทางอื่นๆ ต้องทำการยกเลิกผ่านช่องทางนั้นเท่านั้น",
+    slug: "faded-stay",
+  },
+  {
+    title: "เวลาเช็คอินและเช็คเอาท์ ของ SINGLA รีสอร์ท?",
+    content: "เช็คอินเวลา 14.00 น. เช็คเอ๊าท์เวลา 12.00 น.",
+    slug: "check-in-out",
+  },
+  {
+    title: "ให้บริการอาหารเช้าที่ใหน ตั้งแต่เวลากี่โมง?",
+    content:
+      "บุฟเฟ่ต์อาหารเช้าให้บริการที่ห้องเฮอลิเทจ คาเฟ่ ชั้นล๊อบบี้ ตั้งแต่เวลา 06.00 - 10.00 น.",
+    slug: "food",
+  },
+  {
+    title: "ราคาที่แสดงบนเว็บไซด์เป็นราคาก่อนหรือหลังลดราคาแล้ว?",
+    content:
+      "ราคาที่แสดงบนเว็บไซด์เป็นราคาที่ลดราคาแล้ว โดยไม่มีค่าใช้จ่ายเพิ่มเติมอื่นๆ และค่าธรรมเนียมการจองใดๆ อีก เมื่อทำการจองผ่านเว็บไซด์ของโรงแรม",
+    slug: "price",
+  },
+];
+
 export default function Home() {
   return (
     <PageWrapper>
-      <HeroSection />
-      <div className="items-center justify-center flex flex-col mt-24 mb-20">
-        <h1 className="text-4xl text-yellow-600">สิงหลา รีสอร์ท</h1>
-        <p className="text-yellow-400">
-          พบบรรยากาศทันสมัยและไม่เหมือนใครที่นี้
-        </p>
-        <Separator className="w-80 my-2" />
-        <div className="mt-5 w-3/4">
-          <p className="text-center  text-gray-400 w-full">
-            ที่ SINGLA เรามีห้องพักที่ออกแบบมีความสวยงามและสะดวกสบาย
-            ทุกห้องสามารถชมวิวทะเลหรือวิวธรรมชาติรอบๆ ได้.
-            ห้องพักมีสิ่งอำนวยความสะดวกทั้งหมดที่คุณต้องการสำหรับการพักผ่อนที่สบาย
-            และ รีสอร์ทตั้งอยู่ใกล้กับหลายสถานที่ท่องเที่ยวที่น่าสนใจ เช่น
-            เกาะหนูเกาะแมว, ทะเลสาบสงขลา, สวนสัตว์สงขลา
-          </p>
-        </div>
-        <Separator className="w-72 mt-8" />
-      </div>
-      <Image
-        src="/assets/placeholders/1400x200.svg"
-        alt="400"
-        width={1400}
-        height={200}
-      />
-      <div className="mt-24 mb-20 ">
-        <div className="flex flex-col items-center justify-center mb-6">
-          <h1 className="text-4xl text-yellow-600">ห้องพัก</h1>
+      <ContainerWrapper>
+        <HeroSection />
+        <div className="items-center justify-center flex flex-col mt-24 mb-20">
+          <h1 className="text-4xl text-yellow-600">สิงหลา รีสอร์ท</h1>
           <p className="text-yellow-400">
             พบบรรยากาศทันสมัยและไม่เหมือนใครที่นี้
           </p>
-          {/* <Separator className="w-80 my-2" /> */}
+          <Separator className="w-80 my-2" />
+          <div className="mt-5 w-3/4">
+            <p className="text-center  text-gray-400 w-full">
+              ที่ SINGLA เรามีห้องพักที่ออกแบบมีความสวยงามและสะดวกสบาย
+              ทุกห้องสามารถชมวิวทะเลหรือวิวธรรมชาติรอบๆ ได้.
+              ห้องพักมีสิ่งอำนวยความสะดวกทั้งหมดที่คุณต้องการสำหรับการพักผ่อนที่สบาย
+              และ รีสอร์ทตั้งอยู่ใกล้กับหลายสถานที่ท่องเที่ยวที่น่าสนใจ เช่น
+              เกาะหนูเกาะแมว, ทะเลสาบสงขลา, สวนสัตว์สงขลา
+            </p>
+          </div>
+          <Separator className="w-72 mt-8" />
         </div>
-        <div className="my-4 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center gap-4">
-          {rooms.map((room) => (
-            <RoomCard
-              name={room.name}
-              price={room.price}
-              image={room.image}
-              slug={room.slug}
-              key={room.slug}
-            />
-          ))}
+        <Image
+          src="/assets/placeholders/1400x200.svg"
+          alt="400"
+          width={1400}
+          height={200}
+        />
+        <div className="mt-24 mb-20 ">
+          <div className="flex flex-col items-center justify-center mb-6">
+            <h1 className="text-4xl text-yellow-600">ห้องพัก</h1>
+            <p className="text-yellow-400">
+              พบบรรยากาศทันสมัยและไม่เหมือนใครที่นี้
+            </p>
+            {/* <Separator className="w-80 my-2" /> */}
+          </div>
+          <div className="my-4 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center gap-4">
+            {rooms.map((room) => (
+              <RoomCard
+                name={room.name}
+                price={room.price}
+                image={room.image}
+                slug={room.slug}
+                key={room.slug}
+              />
+            ))}
+          </div>
+          <div className="mt-24 mb-20">
+            <div className="flex flex-col items-center justify-center mb-6">
+              <h1 className="text-4xl text-yellow-600">คำถามที่พบบ่อย</h1>
+            </div>
+            <Accordions Faq={Faq} />
+          </div>
         </div>
-      </div>
+      </ContainerWrapper>
     </PageWrapper>
   );
 }
