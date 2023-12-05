@@ -8,7 +8,7 @@ type Props = {
 
 function MainLayout({ children }: Props) {
   return (
-    <div className="container">
+    <div className="">
       <Navbar />
       {children}
       <Footer />

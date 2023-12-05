@@ -24,7 +24,10 @@ function NavbarMenu() {
           <NavigationMenuContent>
             <ul className="w-24">
               {room.map((item) => (
-                <li className="p-2 hover:bg-gray-100 text-sm" key={item.name}>
+                <li
+                  className="p-2 hover:bg-gray-100 text-sm font-normal"
+                  key={item.name}
+                >
                   {item.name}
                 </li>
               ))}
