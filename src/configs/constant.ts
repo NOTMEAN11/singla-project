@@ -6,7 +6,7 @@ const menu = [
   const room = [
     { name: "ห้องพัก1", Link: "/room/1" },
     { name: "ห้องพัก2", Link: "/room/2" },
-    { name: "ห้องพักทั้งหมด", Link: "/rooms" },
+    { name: "ทั้งหมด", Link: "/rooms" },
   ];
 
   export {menu,room};
