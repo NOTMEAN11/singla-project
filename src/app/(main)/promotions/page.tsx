@@ -2,92 +2,65 @@ import ContainerWrapper from "@/components/wrapper/container-wrapper";
 import PageWrapper from "@/components/wrapper/page-wrapper";
 import React from "react";
 import Image from "next/image";
+import PromotionsCard from "@/components/promotions-card";
+import PageHeader from "@/components/pageheader/pageheader";
+
+type PromotionType = {
+  title: string;
+  content: string;
+  image: string;
+  slug: string;
+};
+
+const promotions: PromotionType[] = [
+  {
+    title: "นาทีสุดท้าย",
+    content:
+      "ราคาดีที่สุดสำหรับการพักผ่อนที่มหาครเมืองกรุงเทพ ที่พักในฝันสำหรับวันหยุดในเมือง",
+    image: "/assets/imgpromotions/promotions1.jpg",
+    slug: "last-minute",
+  },
+  {
+    title: "แพ็กเกจ",
+    content:
+      "คลื่นแห่งการเฉลิมฉลอง: การเดินทางที่เต็มอิ่ม พบประสบการณ์สุดพิเศษกับแพ็คเกจซิกเนเจอร์ ในโอกาสครบรอบ",
+    image: "/assets/imgpromotions/promotions2.jpg",
+    slug: "faded-stay",
+  },
+  {
+    title: "ห้องพักและอาหารเช้า",
+    content: "SINGLA ช่วงเวลาดีดีแห่งความสุขตรงนี้ของคุณ",
+    image: "/assets/imgpromotions/promotions3.jpg",
+    slug: "faded-stay",
+  },
+  {
+    title: "แพ็กเกจ",
+    content: "ยิ่งพักนาน ยิ่งคุ้ม พลาดไม่ได้กับข้อเสนอยิ่งพักนาน ยิ่งคุ้ม",
+    image: "/assets/imgpromotions/promotions4.jpg",
+    slug: "faded-stay",
+  },
+  {
+    title: "ข้อเสนอห้องพัก",
+    content:
+      "พักก่อน จ่ายทีหลัง ผ่อนชำระแบบไม่มีดอกเบี้ย สำหรับผู้ถือบัตรที่ร่วมรายการ",
+    image: "/assets/imgpromotions/promotions5.jpg",
+    slug: "faded-stay",
+  },
+];
 
 function PromotionsPage() {
   return (
-    <PageWrapper className="mt-20">
-      <h1 className="flex justify-center items-center uppercase font-bold my-24">
-        promotions singla
-      </h1>
+    <PageWrapper className="mt-20 mb-4">
+      <PageHeader
+        title="โปรโมชั่นทั้งหมด"
+        className="container"
+        breadcrumb={[{ title: "โปรโมชั่น", path: "/promotions" }]}
+      />
       <ContainerWrapper className="grid justify-center items-center">
-        <div className="grid-cols-3 grid">
-          <div className="relative">
-            <p className="absolute text-white font-bold text-md">นาทีสุดท้าย</p>
-            <Image
-              src="/assets/imgpromotions/promotions1.jpg"
-              alt="400x200"
-              width={400}
-              height={200}
-            />
-            <p className="absolute bottom-1 text-white font-bold text-md">
-              ราคาดีที่สุดสำหรับการพักผ่อนที่มหาครเมืองกรุงเทพ
-              ที่พักในฝันสำหรับวันหยุดในเมือง
-            </p>
-          </div>
-          <div className="relative">
-            <p className="absolute text-white font-bold text-md">แพ็กเกจ</p>
-            <Image
-              src="/assets/imgpromotions/promotions2.jpg"
-              alt="400x200"
-              width={400}
-              height={200}
-            />
-            <p className="absolute bottom-1 text-white font-bold">
-              คลื่นแห่งการเฉลิมฉลอง: การเดินทางที่เต็มอิ่ม
-              <p></p>
-              <span>
-                พบประสบการณ์สุดพิเศษกับแพ็คเกจซิกเนเจอร์ ในโอกาสครบรอบ
-              </span>
-            </p>
-          </div>
-          <div className="relative">
-            <p className="absolute text-white font-bold text-md">
-              ห้องพักและอาหารเช้า
-            </p>
-            <Image
-              src="/assets/imgpromotions/promotions3.jpg"
-              alt="400x200"
-              width={400}
-              height={200}
-            />
-            <p className="absolute bottom-1 text-white font-bold">
-              SINGLA
-              <p></p>
-              <span>ช่วงเวลาดีดีแห่งความสุขตรงนี้ของคุณ</span>
-            </p>
-          </div>
-          <div className="relative">
-            <p className="absolute text-white font-bold text-md">แพ็กเกจ</p>
-            <Image
-              src="/assets/imgpromotions/promotions4.jpg"
-              alt="400x200"
-              width={400}
-              height={200}
-            />
-            <p className="absolute text-white font-bold bottom-1">
-              ยิ่งพักนาน ยิ่งคุ้ม
-              <p></p>
-              <span>พลาดไม่ได้กับข้อเสนอยิ่งพักนาน ยิ่งคุ้ม</span>
-            </p>
-          </div>
-          <div className="relative">
-            <p className="absolute text-white font-bold text-md">
-              ข้อเสนอห้องพัก
-            </p>
-            <Image
-              src="/assets/imgpromotions/promotions5.jpg"
-              alt="400x200"
-              width={400}
-              height={200}
-            />
-            <p className="absolute text-white font-bold bottom-1">
-              พักก่อน จ่ายทีหลัง
-              <p></p>
-              <span>
-                ผ่อนชำระแบบไม่มีดอกเบี้ย สำหรับผู้ถือบัตรที่ร่วมรายการ
-              </span>
-            </p>
-          </div>
+        <div className="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid gap-2 mb-4">
+          {promotions.map((promotion) => (
+            <PromotionsCard {...promotion} key={promotion.slug} />
+          ))}
         </div>
       </ContainerWrapper>
     </PageWrapper>
