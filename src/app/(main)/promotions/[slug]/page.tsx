@@ -58,7 +58,7 @@ function PromotionPage({ params }: { params: { slug: string } }) {
     return notFound();
   }
   return (
-    <PageWrapper className="mt-20 mb-8">
+    <PageWrapper className="mt-20">
       <PageHeader
         title={promotion.title}
         disableTitle

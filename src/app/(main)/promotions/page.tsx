@@ -50,7 +50,7 @@ const promotions: PromotionType[] = [
 
 function PromotionsPage() {
   return (
-    <PageWrapper className="mt-20 mb-4">
+    <PageWrapper className="mt-20 ">
       <PageHeader
         title="โปรโมชั่นทั้งหมด"
         className="container"
