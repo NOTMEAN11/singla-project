@@ -17,7 +17,7 @@ function NavbarDrawer() {
       <SheetTrigger className="md:hidden block">
         <BiMenu className="text-3xl" />
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="z-[9999]">
         <SheetHeader className="text-left">
           <SheetTitle className="p-2">SINGLA</SheetTitle>
           <ul>

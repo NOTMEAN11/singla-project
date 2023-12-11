@@ -12,7 +12,7 @@ function HeroSection() {
           ครบทุกความต้องการของคุณ
         </h1>
         <Image
-          src={"/assets/bg.jpg"}
+          src={"/assets/bgs/bg.jpg"}
           alt="404"
           width={1400}
           height={500}
