@@ -16,7 +16,7 @@ const promotions: PromotionType[] = [
   {
     title: "นาทีสุดท้าย",
     content:
-      "ราคาดีที่สุดสำหรับการพักผ่อนที่มหาครเมืองกรุงเทพ ที่พักในฝันสำหรับวันหยุดในเมือง",
+      "ราคาดีที่สุดสำหรับการพักผ่อนที่มหาครเมืองสงขลา ที่พักในฝันสำหรับวันหยุดในเมือง",
     image: "/assets/imgpromotions/promotions1.jpg",
     slug: "last-minute",
   },
@@ -25,26 +25,33 @@ const promotions: PromotionType[] = [
     content:
       "คลื่นแห่งการเฉลิมฉลอง: การเดินทางที่เต็มอิ่ม พบประสบการณ์สุดพิเศษกับแพ็คเกจซิกเนเจอร์ ในโอกาสครบรอบ",
     image: "/assets/imgpromotions/promotions2.jpg",
-    slug: "faded-stay",
+    slug: "pack-age",
   },
   {
     title: "ห้องพักและอาหารเช้า",
     content: "SINGLA ช่วงเวลาดีดีแห่งความสุขตรงนี้ของคุณ",
     image: "/assets/imgpromotions/promotions3.jpg",
-    slug: "faded-stay",
+    slug: "room-breakfast",
   },
   {
-    title: "แพ็กเกจ",
+    title: "ยิ่งพักนาน ยิ่งคุ้ม",
     content: "ยิ่งพักนาน ยิ่งคุ้ม พลาดไม่ได้กับข้อเสนอยิ่งพักนาน ยิ่งคุ้ม",
     image: "/assets/imgpromotions/promotions4.jpg",
-    slug: "faded-stay",
+    slug: "longer-stay",
   },
   {
     title: "ข้อเสนอห้องพัก",
     content:
       "พักก่อน จ่ายทีหลัง ผ่อนชำระแบบไม่มีดอกเบี้ย สำหรับผู้ถือบัตรที่ร่วมรายการ",
     image: "/assets/imgpromotions/promotions5.jpg",
-    slug: "faded-stay",
+    slug: "room-offers",
+  },
+  {
+    title: "ดินเนอร์สุดโรแมนติก​",
+    content:
+      "เฉลิมฉลองความโรแมนติกในขณะที่ค้นพบอาหารค่ำสุดโรแมนติกกับคนสำคัญของคุณ",
+    image: "/assets/imgpromotions/promotions6.jpg",
+    slug: "romantic-dinner",
   },
 ];
 
