@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Button, buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
 import { room } from "@/configs/constant";
 

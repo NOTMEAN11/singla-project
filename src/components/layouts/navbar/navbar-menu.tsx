@@ -28,7 +28,7 @@ function NavbarMenu() {
                   className="p-2 hover:bg-gray-100 text-sm font-normal"
                   key={item.name}
                 >
-                  {item.name}
+                  <Link href={item.Link}>{item.name}</Link>
                 </li>
               ))}
             </ul>

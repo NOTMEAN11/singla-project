@@ -4,8 +4,8 @@ const menu = [
   ];
   
   const room = [
-    { name: "ห้องพัก1", Link: "/room/1" },
-    { name: "ห้องพัก2", Link: "/room/2" },
+    { name: "ห้องสุพรีเรียร์", Link: "/rooms/1" },
+    { name: "ห้องดีลักซ์", Link: "/rooms/2" },
     { name: "ทั้งหมด", Link: "/rooms" },
   ];
 

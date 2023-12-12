@@ -2,7 +2,7 @@ import ContainerWrapper from "@/components/wrapper/container-wrapper";
 import PageWrapper from "@/components/wrapper/page-wrapper";
 import React from "react";
 import Image from "next/image";
-import PromotionsCard from "@/components/promotions-card";
+import PromotionsCard from "@/components/card/promotions-card";
 import PageHeader from "@/components/pageheader/pageheader";
 import { notFound } from "next/navigation";
 
@@ -26,7 +26,7 @@ const promotions: PromotionType[] = [
     content:
       "คลื่นแห่งการเฉลิมฉลอง: การเดินทางที่เต็มอิ่ม พบประสบการณ์สุดพิเศษกับแพ็คเกจซิกเนเจอร์ ในโอกาสครบรอบ",
     image: "/assets/imgpromotions/promotions2.jpg",
-    slug: "pack-age",
+    slug: "package",
   },
   {
     title: "ห้องพักและอาหารเช้า",

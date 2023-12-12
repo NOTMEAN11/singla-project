@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import PageWrapper from "@/components/wrapper/page-wrapper";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import RoomCard from "@/components/room-card";
+import RoomCard from "@/components/card/room-card";
 import Footer from "@/components/layouts/footer/footer";
 import ContainerWrapper from "@/components/wrapper/container-wrapper";
 import Accordions from "@/components/accordions";
