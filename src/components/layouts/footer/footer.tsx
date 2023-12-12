@@ -15,12 +15,24 @@ function Footer() {
             <p>โปรโมชั่น</p>
             <p>ติดต่อเรา</p>
           </div>
-          <div className="my-16">
-            <h3 className="uppercase mb-4">About</h3>
-            <div className="flex space-x-3">
-              <FaLine />
-              <SiInstagram />
-              <IoCall />
+          <div className="my-16 font-bold">
+            <h3 className="uppercase">About</h3>
+            <div className="text-sm">
+              <ul>
+                <li className="flex space-x-2">
+                  <FaLine /> <span>@singla2432</span>
+                </li>
+                <li className="flex space-x-2">
+                  <SiInstagram className="" /> <span>@singla2432</span>
+                </li>
+                <li className="flex space-x-2">
+                  <IoCall /> <span>088-888-8888</span>
+                </li>
+              </ul>
+              <div>
+                <p className="text-lg">ที่อยู่</p>
+                <p>Phawong, Mueang Songkhla District, Songkhla 90000</p>
+              </div>
             </div>
           </div>
           <div className="mt-16">
