@@ -119,6 +119,7 @@ export default function Home() {
                 image={room.image}
                 slug={room.slug}
                 key={room.slug}
+                className="w-full"
               />
             ))}
           </div>
