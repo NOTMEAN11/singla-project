@@ -1,13 +1,6 @@
-type Step = "rooms" | "details" | "confirm" | "complete";
+import { RoomType } from "./room-type";
 
-type RoomType = {
-  id: string;
-  name: string;
-  price: number;
-  image: string[];
-  desc: string;
-  slug: string;
-};
+type Step = "rooms" | "details" | "confirm" | "complete";
 
 type Guest = {
   adults: number;
