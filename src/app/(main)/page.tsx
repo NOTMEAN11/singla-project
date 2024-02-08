@@ -7,6 +7,8 @@ import RoomCard from "@/components/card/room-card";
 import Footer from "@/components/layouts/footer/footer";
 import ContainerWrapper from "@/components/wrapper/container-wrapper";
 import Accordions from "@/components/accordions";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 type Room = {
   price: number;
@@ -75,19 +77,19 @@ const Faq: faqs[] = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
   return (
     <PageWrapper>
       <ContainerWrapper>
         <HeroSection />
-        <div className="items-center justify-center flex flex-col mt-24 mb-20">
+        <div className="flex flex-col items-center justify-center mt-24 mb-20">
           <h1 className="text-4xl text-yellow-600">สิงหลา รีสอร์ท</h1>
           <p className="text-yellow-400">
             พบบรรยากาศทันสมัยและไม่เหมือนใครที่นี้
           </p>
-          <Separator className="w-80 my-2" />
-          <div className="mt-5 w-3/4">
-            <p className="text-center  text-gray-400 w-full">
+          <Separator className="my-2 w-80" />
+          <div className="w-3/4 mt-5">
+            <p className="w-full text-center text-gray-400">
               ที่ SINGLA เรามีห้องพักที่ออกแบบมีความสวยงามและสะดวกสบาย
               ทุกห้องสามารถชมวิวทะเลหรือวิวธรรมชาติรอบๆ ได้.
               ห้องพักมีสิ่งอำนวยความสะดวกทั้งหมดที่คุณต้องการสำหรับการพักผ่อนที่สบาย
@@ -95,7 +97,7 @@ export default function Home() {
               เกาะหนูเกาะแมว, ทะเลสาบสงขลา, สวนสัตว์สงขลา
             </p>
           </div>
-          <Separator className="w-72 mt-8" />
+          <Separator className="mt-8 w-72" />
         </div>
         <Image
           src="/assets/placeholders/1400x200.svg"
@@ -109,9 +111,9 @@ export default function Home() {
             <p className="text-yellow-400">
               พบบรรยากาศทันสมัยและไม่เหมือนใครที่นี้
             </p>
-            {/* <Separator className="w-80 my-2" /> */}
+            {/* <Separator className="my-2 w-80" /> */}
           </div>
-          <div className="my-4 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center gap-4">
+          <div className="grid grid-cols-1 gap-4 my-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center">
             {rooms.map((room) => (
               <RoomCard
                 name={room.name}
