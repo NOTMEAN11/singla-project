@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model RoomType {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Int
+  capacity    Int
+  image       String[]
+  slug        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  rooms       Room[]
+}
+
+model Room {
+  id         String    @id @default(uuid())
+  name       String
+  status     String    @default("available")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  roomType   RoomType  @relation(fields: [roomTypeId], references: [id])
+  roomTypeId String
+  bookings   Booking[]
+}
+
+model Booking {
+  id            String   @id @default(cuid())
+  name          String
+  email         String
+  phone         String
+  checkIn       DateTime
+  checkOut      DateTime
+  adults        Int
+  children      Int
+  isBuffet      Boolean
+  isPickup      Boolean
+  discountPrice Int
+  feePrice      Int      @default(500)
+  totalPrice    Int
+  status        String   @default("pending")
+  request       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  room          Room     @relation(fields: [roomId], references: [id])
+  roomId        String
+}
+
+model Coupon {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  discount    Int
+  description String
+  total       Int
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Promotion {
+  id          String   @id @default(cuid())
+  name        String
+  image       String
+  description String
+  content     String
+  slug        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Faq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
