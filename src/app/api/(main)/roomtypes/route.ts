@@ -26,6 +26,7 @@ export async function POST(req: Request) {
       price: result.data.price,
       capacity: result.data.capacity,
       image: result.data.image,
+      slug: result.data.slug,
     },
   });
 
