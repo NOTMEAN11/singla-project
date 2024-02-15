@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 import { BedSingle, Users } from "lucide-react";
 import { toast } from "sonner";
 
-import { roomtype } from "@/configs/constant";
-
 import useBookingStore from "@/hooks/usebooking";
 
 import { Button } from "@/components/ui/button";
@@ -17,8 +15,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { RoomType } from "@/types/room-type";
 
-function BookingSection() {
+type Props = {
+  roomtype: RoomType[];
+};
+
+function BookingSection({ roomtype }: Props) {
   const { checkInDate, checkOutDate, setRoom, room, guest, setGuest } =
     useBookingStore();
 
@@ -53,7 +56,7 @@ function BookingSection() {
         <Button
           variant="outline"
           role="combobox"
-          className="w-full flex justify-start space-x-2 text-xs"
+          className="flex justify-start w-full space-x-2 text-xs"
         >
           <Users size={14} />{" "}
           <p>
@@ -64,7 +67,7 @@ function BookingSection() {
       </PopoverTrigger>
       <PopoverContent className="w-auto p-2" align="start">
         <div className="flex items-center justify-between p-1">
-          <p className="text-sm mx-4">ผู้ใหญ่</p>
+          <p className="mx-4 text-sm">ผู้ใหญ่</p>
           <div className="flex items-center space-x-2">
             <Button
               variant="outline"
@@ -79,7 +82,7 @@ function BookingSection() {
             >
               -
             </Button>
-            <p className="text-sm px-4">{guest?.adults}</p>
+            <p className="px-4 text-sm">{guest?.adults}</p>
             <Button
               variant="outline"
               className="w-6 h-6"
@@ -95,7 +98,7 @@ function BookingSection() {
           </div>
         </div>
         <div className="flex items-center justify-between p-1">
-          <p className="text-sm mx-4">เด็ก</p>
+          <p className="mx-4 text-sm">เด็ก</p>
           <div className="flex items-center space-x-2">
             <Button
               variant="outline"
@@ -110,7 +113,7 @@ function BookingSection() {
             >
               -
             </Button>
-            <p className="text-sm px-4">{guest?.children}</p>
+            <p className="px-4 text-sm">{guest?.children}</p>
             <Button
               variant="outline"
               className="w-6 h-6"
@@ -132,12 +135,12 @@ function BookingSection() {
 
   return (
     <>
-      <div className="p-2 border  grid grid-cols-1 lg:hidden w-full space-y-2">
+      <div className="grid w-full grid-cols-1 p-2 space-y-2 border lg:hidden">
         <Combobox
           data={roomtype}
           placeholder="โปรดเลือกประเภทห้อง"
           className="max-w-full"
-          icon={<BedSingle className="mr-2 h-4 w-4" />}
+          icon={<BedSingle className="w-4 h-4 mr-2" />}
           fn={handleRoomType}
         />
         <DatePickerWithRange className="max-w-full" />
@@ -151,12 +154,12 @@ function BookingSection() {
           <p>ดำเนินการต่อ</p>
         </Button>
       </div>
-      <div className="p-2 border  items-center justify-center hidden lg:flex">
+      <div className="items-center justify-center hidden p-2 border lg:flex">
         <div className="flex items-center space-x-2">
           <Combobox
             data={roomtype}
             placeholder="โปรดเลือกประเภทห้อง"
-            icon={<BedSingle className="mr-2 h-4 w-4" />}
+            icon={<BedSingle className="w-4 h-4 mr-2" />}
             fn={handleRoomType}
           />
           <DatePickerWithRange />

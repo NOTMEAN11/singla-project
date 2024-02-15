@@ -1,8 +1,7 @@
 "use client";
 import HoverIcon from "@/components/hover-icon";
-import { roomtype } from "@/configs/constant";
 import useBookingStore from "@/hooks/usebooking";
-import { THB } from "@/lib/utils";
+import { THB, cn } from "@/lib/utils";
 import { InfoIcon, Lock } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -19,13 +18,22 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
+import useBookingInfo from "@/hooks/usebooking-info";
+import { RoomType } from "@/types/room-type";
+import { Coupon } from "@prisma/client";
+import { toast } from "sonner";
 
-function ConfirmSummary() {
+type Props = {
+  coupons: Coupon[];
+  roomtype: RoomType[];
+};
+
+function ConfirmSummary({ coupons, roomtype }: Props) {
   const { checkInDate, checkOutDate, room, guest, fee, options, setOptions } =
     useBookingStore();
-
   const router = useRouter();
-  const ROOM_TYPE = roomtype.find((item) => item.id === room);
+
+  const ROOM_TYPE = roomtype?.find((item) => item.id === room);
 
   const checkInDateObj = new Date(checkInDate!);
   const checkOutDateObj = new Date(checkOutDate!);
@@ -36,18 +44,11 @@ function ConfirmSummary() {
   const shuttle = 300 * guest!.adults + guest!.children * 150;
   const buffet = 199 * guest!.adults;
 
-  const usercoupon = "123456789";
-  const coupons = [
-    { code: "1234", discount: 100 },
-    { code: "12345", discount: 200 },
-    { code: "123456", discount: 300 },
-    { code: "1234567", discount: 400 },
-    { code: "12345678", discount: 500 },
-    { code: "123456789", discount: 600 },
-  ];
+  const { coupon, email, name, phone, request } = useBookingInfo();
 
   function getTotalPrice() {
-    let price = ROOM_TYPE?.price! + fee;
+    let price = ROOM_TYPE?.price! * daysDifference + fee;
+
     if (options?.buffet) {
       price += 199 * guest!.adults;
     }
@@ -60,8 +61,8 @@ function ConfirmSummary() {
       price += shuttle;
     }
 
-    if (usercoupon) {
-      price -= coupons.find((item) => item.code === usercoupon)?.discount!;
+    if (coupon) {
+      price -= coupons.find((item) => item.code === coupon)?.discount! || 0;
     }
 
     let vat = price * 0.07;
@@ -69,22 +70,62 @@ function ConfirmSummary() {
     return { price, vat };
   }
 
+  console.log(ROOM_TYPE?.price);
+
+  const discount = coupons.find((item) => item.code === coupon)?.discount! || 0;
+
   const totalPrice = THB(getTotalPrice().price);
   const feePrice = THB(fee);
   const vatPrice = THB(getTotalPrice().vat);
-  const couponDiscount = THB(
-    coupons.find((item) => item.code === usercoupon)?.discount!
-  );
+  const couponDiscount = THB(discount);
 
   async function handleSubmit() {
-    router.push("/booking?step=complete");
+    toast.loading("กำลังทำการจองห้องพัก");
+    try {
+      const res = await fetch("/api/booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          roomtypeId: room,
+          checkIn: checkInDate,
+          checkOut: checkOutDate,
+          adults: guest?.adults,
+          children: guest?.children,
+          isBuffet: options?.buffet,
+          isPickup: options?.shuttle,
+          feePrice: fee,
+          discountPrice: discount,
+          totalPrice: getTotalPrice().price,
+          status: "pending",
+          request,
+        }),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success(data.message);
+        router.push("/booking?step=complete");
+      }
+
+      if (res.status === 404) {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("มีบางอย่างผิดพลาด โปรดลองใหม่อีกครั้ง");
+      console.log(error);
+    }
   }
 
   return (
     <>
-      <div className="p-2 border rounded-md text-xs my-4">
-        <h1 className="text-sm mb-2 font-bold">สรุปราคาของคุณ</h1>
-        <div className="grid grid-cols-2 bg-gray-200 p-2">
+      <div className="p-2 my-4 text-xs border rounded-md">
+        <h1 className="mb-2 text-sm font-bold">สรุปราคาของคุณ</h1>
+        <div className="grid grid-cols-2 p-2 bg-gray-200">
           <h1 className="text-2xl font-bold">ยอดรวม</h1>
           <div>
             <h2 className="text-xl font-bold">{totalPrice}</h2>
@@ -92,12 +133,16 @@ function ConfirmSummary() {
           </div>
         </div>
         <div>
-          <h1 className="text-sm mt-2 mb-1">ข้อมูลเกี่ยวกับราคา</h1>
+          <h1 className="mt-2 mb-1 text-sm">ข้อมูลเกี่ยวกับราคา</h1>
 
-          <div className="flex items-center justify-between">
+          <div
+            className={cn(
+              "flex items-center justify-between",
+              discount === 0 && "hidden"
+            )}
+          >
             <p>
-              ส่วนลด{" "}
-              <span className="text-gray-400 text-xs">({usercoupon})</span>
+              ส่วนลด <span className="text-xs text-gray-400">({coupon})</span>
             </p>
             <p className="text-red-500">-{couponDiscount}</p>
           </div>
@@ -130,7 +175,7 @@ function ConfirmSummary() {
         </Button>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button className="text-xs space-x-1">
+            <Button className="space-x-1 text-xs">
               <Lock size={14} /> <p>ยืนยันการจอง</p>
             </Button>
           </AlertDialogTrigger>

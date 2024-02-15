@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import useBookingStore from "@/hooks/usebooking";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import useBookingInfo from "@/hooks/usebooking-info";
 
 const bookingSchema = z.object({
   firstName: z.string().min(2, { message: "กรุณากรอกชื่อจริง" }),
@@ -31,6 +32,7 @@ const bookingSchema = z.object({
 
 function BookingForm() {
   const { checkInDate, checkOutDate, room, guest, fee } = useBookingStore();
+  const { setInfo } = useBookingInfo();
   const router = useRouter();
   const today = new Date();
   const form = useForm<z.infer<typeof bookingSchema>>({
@@ -45,7 +47,7 @@ function BookingForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof bookingSchema>) {
+  async function onSubmit(values: z.infer<typeof bookingSchema>) {
     if (!room || room === null) {
       toast.error("มีบางอย่างผิดพลาด โปรดลองใหม่อีกครั้ง");
       router.push("/booking");
@@ -61,29 +63,21 @@ function BookingForm() {
       return;
     }
 
-    let coupon = [
-      "1234",
-      "12345",
-      "123456",
-      "1234567",
-      "12345678",
-      "123456789",
-      "1234567890",
-    ];
+    setInfo({
+      name: `${values.firstName} ${values.lastName}`,
+      email: values.email,
+      phone: values.phone,
+      coupon: values.coupon,
+      request: values.request,
+    });
 
-    if (values.coupon && !coupon.includes(values.coupon)) {
-      toast.error("ไม่พบรหัสส่วนลด");
-      return;
-    }
-
-    console.log(values);
     router.push("/booking?step=confirm");
   }
 
   return (
     <div>
-      <h1 className=" font-bold mb-2 text-xl">กรอกข้อมูลของท่าน</h1>
-      <div className="bg-gray-300 border border-gray-400 rounded-md p-2 flex items-center space-x-2 mb-2">
+      <h1 className="mb-2 text-xl font-bold ">กรอกข้อมูลของท่าน</h1>
+      <div className="flex items-center p-2 mb-2 space-x-2 bg-gray-300 border border-gray-400 rounded-md">
         <InfoIcon className="text-gray-500" />
         <p className="text-xs">
           ใกล้เสร็จสมบูรณ์แล้ว! เพียงระบุข้อมูลจำเป็นในช่องที่มีเครื่องหมาย{" "}
@@ -93,7 +87,7 @@ function BookingForm() {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-          <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 ">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 ">
             <FormField
               control={form.control}
               name="firstName"
@@ -150,7 +144,7 @@ function BookingForm() {
               </FormItem>
             )}
           />
-          <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 ">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 ">
             <FormField
               control={form.control}
               name="phone"

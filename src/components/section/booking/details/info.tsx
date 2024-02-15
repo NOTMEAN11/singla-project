@@ -13,14 +13,18 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { RoomType } from "@/types/room-type";
 
-function BookingInfo() {
+type Props = {
+  roomtype: RoomType[];
+};
+
+function BookingInfo({ roomtype }: Props) {
   const { checkInDate, checkOutDate, room, guest, fee, options, setOptions } =
     useBookingStore();
 
   const router = useRouter();
-  const ROOM_TYPE = roomtype.find((item) => item.id === room);
-
+  const ROOM_TYPE = roomtype?.find((item) => item.id === room);
   const today = new Date();
   const checkInDateObj = new Date(checkInDate!);
   const checkOutDateObj = new Date(checkOutDate!);
@@ -56,11 +60,11 @@ function BookingInfo() {
 
   return (
     <div>
-      <div className="p-2 border rounded-md text-xs">
-        <h1 className=" font-bold mb-2 text-sm">รายละเอียดการจอง</h1>
+      <div className="p-2 text-xs border rounded-md">
+        <h1 className="mb-2 text-sm font-bold ">รายละเอียดการจอง</h1>
         <div className="flex flex-col space-y-2">
           <div className="grid grid-cols-2">
-            <p className="text-gray-950 font-semibold">ประเภทห้องพัก</p>
+            <p className="font-semibold text-gray-950">ประเภทห้องพัก</p>
             <Link
               href={"/"}
               className="text-gray-950 hover:text-blue-500 hover:underline"
@@ -70,7 +74,7 @@ function BookingInfo() {
           </div>
           <div className="grid grid-cols-2">
             <div className="">
-              <p className="text-gray-950 font-semibold">เช็คอิน</p>
+              <p className="font-semibold text-gray-950">เช็คอิน</p>
               <p className="text-gray-950">
                 {format(checkInDate!, "dd MMM yyyy", {
                   locale: th,
@@ -79,7 +83,7 @@ function BookingInfo() {
               <p>14:00 น. – 23:30 น.</p>
             </div>
             <div className="">
-              <p className="text-gray-950 font-semibold">เช็คเอ้าท์</p>
+              <p className="font-semibold text-gray-950">เช็คเอ้าท์</p>
               <p className="text-gray-950">
                 {format(checkOutDate!, "dd MMM yyyy", { locale: th })}
               </p>
@@ -87,15 +91,15 @@ function BookingInfo() {
             </div>
           </div>
           <div className="grid grid-cols-2">
-            <p className="text-gray-950 font-semibold">ระยะเวลาเข้าพัก</p>
+            <p className="font-semibold text-gray-950">ระยะเวลาเข้าพัก</p>
             <p className="text-gray-950">{Math.floor(daysDifference)} วัน</p>
           </div>
           <div className="grid grid-cols-2">
-            <p className="text-gray-950 font-semibold">ผู้ใหญ่</p>
+            <p className="font-semibold text-gray-950">ผู้ใหญ่</p>
             <p className="text-gray-950">{guest?.adults} คน</p>
           </div>
           <div className="grid grid-cols-2 ">
-            <p className="text-gray-950 font-semibold">เด็ก</p>
+            <p className="font-semibold text-gray-950">เด็ก</p>
             <p className="text-gray-950">{guest?.children} คน</p>
           </div>
           <Link
@@ -109,11 +113,11 @@ function BookingInfo() {
           </Link>
         </div>
       </div>
-      <div className="p-2 border rounded-md text-xs my-2">
-        <h1 className="text-sm mb-2 font-bold">ตัวเลือกเพิ่มเติม</h1>
+      <div className="p-2 my-2 text-xs border rounded-md">
+        <h1 className="mb-2 text-sm font-bold">ตัวเลือกเพิ่มเติม</h1>
 
         <div className="flex items-center justify-between">
-          <div className="items-center my-1 flex space-x-2">
+          <div className="flex items-center my-1 space-x-2">
             <Checkbox
               id="buffet"
               checked={options?.buffet}
@@ -129,7 +133,7 @@ function BookingInfo() {
             <div className="grid gap-1.5 leading-none">
               <label
                 htmlFor="buffet"
-                className=" font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center"
+                className="flex items-center font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 บุฟเฟ่ต์เช้า
                 <HoverIcon
@@ -154,7 +158,7 @@ function BookingInfo() {
           <p>{THB(buffet)}</p>
         </div>
         <div className="flex items-center justify-between">
-          <div className="items-center my-1 flex space-x-2">
+          <div className="flex items-center my-1 space-x-2">
             <Checkbox
               id="shuttle"
               checked={options?.shuttle}
@@ -170,7 +174,7 @@ function BookingInfo() {
             <div className="grid gap-1.5 leading-none">
               <label
                 htmlFor="shuttle"
-                className=" font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center"
+                className="flex items-center font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 <div>รถรับ-ส่งสนามบิน</div>
                 <HoverIcon
@@ -191,12 +195,12 @@ function BookingInfo() {
           <p>{THB(shuttle)}</p>
         </div>
         <div className="flex items-center justify-between">
-          <div className="items-center my-1 flex space-x-2">
+          <div className="flex items-center my-1 space-x-2">
             <Checkbox id="motocycle" disabled checked />
             <div className="grid gap-1.5 leading-none">
               <label
                 htmlFor="motocycle"
-                className=" font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center"
+                className="flex items-center font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 <div>บริการเช่ามอเตอร์ไซค์</div>
                 <HoverIcon
@@ -220,9 +224,9 @@ function BookingInfo() {
           {/* <p>{THB(motocycle)}</p> */}
         </div>
       </div>
-      <div className="p-2 border rounded-md text-xs my-2">
-        <h1 className="text-sm mb-2 font-bold">สรุปราคาของคุณ</h1>
-        <div className="grid grid-cols-2 bg-gray-200 p-2">
+      <div className="p-2 my-2 text-xs border rounded-md">
+        <h1 className="mb-2 text-sm font-bold">สรุปราคาของคุณ</h1>
+        <div className="grid grid-cols-2 p-2 bg-gray-200">
           <h1 className="text-2xl font-bold">ยอดรวม</h1>
           <div>
             <h2 className="text-xl font-bold">{totalPrice}</h2>
@@ -230,7 +234,7 @@ function BookingInfo() {
           </div>
         </div>
         <div>
-          <h1 className="text-sm mt-2 mb-1">ข้อมูลเกี่ยวกับราคา</h1>
+          <h1 className="mt-2 mb-1 text-sm">ข้อมูลเกี่ยวกับราคา</h1>
 
           <div className="flex items-center justify-between">
             <p> ภาษีมูลค่าเพิ่ม (VAT) 7% </p>
