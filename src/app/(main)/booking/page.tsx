@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import db from "@/configs/db";
+
 import PageHeader from "@/components/pageheader/pageheader";
 
 import PageWrapper from "@/components/wrapper/page-wrapper";
@@ -21,8 +23,16 @@ import ConfirmBookingDetail from "@/components/section/booking/confirm/booking-d
 import ConfirmSummary from "@/components/section/booking/confirm/summary";
 import ConfirmUserDetail from "@/components/section/booking/confirm/user-detail";
 
-function BookingPage({ searchParams }: { searchParams: { step: Step } }) {
+async function getData() {
+  const roomtype = await db.roomType.findMany();
+  const coupons = await db.coupon.findMany();
+  return { roomtype, coupons };
+}
+
+async function BookingPage({ searchParams }: { searchParams: { step: Step } }) {
   const step: Step = searchParams.step || "rooms";
+
+  const data = await getData();
 
   if (
     step !== "rooms" &&
@@ -42,23 +52,23 @@ function BookingPage({ searchParams }: { searchParams: { step: Step } }) {
         height={100}
         className="object-cover w-full h-[200px]"
       />
-      <BookingSection />
+      <BookingSection roomtype={data.roomtype} />
     </>
   );
 
   let details = (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3 ">
-      <BookingInfo />
-      <div className="md:col-span-2 p-4 border rounded-md">
+      <BookingInfo roomtype={data.roomtype} />
+      <div className="p-4 border rounded-md md:col-span-2">
         <BookingForm />
       </div>
       <div> </div>
-      <div className="md:col-span-2 p-4 border rounded-md">
+      <div className="p-4 border rounded-md md:col-span-2">
         <h1 className="text-xl font-bold">ข้อกำหนดของที่พัก</h1>
         <p className="text-xs">
           ผู้ดูแลที่พักต้องการให้ท่านยอมรับข้อกำหนดต่อไปนี้ของที่พัก
         </p>
-        <ul className="list-disc ml-6 text-xs">
+        <ul className="ml-6 text-xs list-disc">
           <li>ห้ามจัดงาน/ปาร์ตี้</li>
           <li>ห้ามนำสัตว์เลี้ยงเข้าพัก</li>
           <li>ห้ามสูบบุหรี่ภายในที่พัก</li>
@@ -69,26 +79,26 @@ function BookingPage({ searchParams }: { searchParams: { step: Step } }) {
   );
 
   let confirm = (
-    <div className="w-full max-w-2xl flex items-center justify-center mx-auto">
-      <div className="p-4 border rounded-md w-full ">
-        <h1 className="font-bold text-lg">ยืนยันการจอง</h1>
+    <div className="flex items-center justify-center w-full max-w-2xl mx-auto">
+      <div className="w-full p-4 border rounded-md ">
+        <h1 className="text-lg font-bold">ยืนยันการจอง</h1>
         <p className="text-xs">
           กรุณาตรวจสอบข้อมูลของท่านก่อนทำการยืนยันการจองห้องพัก
         </p>
-        <ConfirmBookingDetail />
+        <ConfirmBookingDetail roomtype={data.roomtype} />
         <ConfirmUserDetail />
-        <ConfirmSummary />
+        <ConfirmSummary roomtype={data.roomtype} coupons={data.coupons} />
       </div>
     </div>
   );
 
   const complete = (
-    <div className="w-full max-w-2xl flex items-center justify-center mx-auto">
-      <div className="p-4 border rounded-md w-full ">
+    <div className="flex items-center justify-center w-full max-w-2xl mx-auto">
+      <div className="w-full p-4 border rounded-md ">
         <div className="flex items-center justify-center space-x-2">
           <CheckCircle className="text-green-500" size={48} />
           <div>
-            <h1 className="font-bold text-lg">การจองเสร็จสมบูรณ์</h1>
+            <h1 className="text-lg font-bold">การจองเสร็จสมบูรณ์</h1>
             <p className="text-xs">
               ระบบจะทำการส่งข้อมูลการชำระเงินผ่านช่องทางอีเมลของท่าน
             </p>
@@ -112,7 +122,7 @@ function BookingPage({ searchParams }: { searchParams: { step: Step } }) {
           breadcrumb={[{ title: "จองห้อง", path: "/promotions" }]}
           disableTitle
         />
-        <div className="flex items-center justify-center space-x-2 w-full mb-4">
+        <div className="flex items-center justify-center w-full mb-4 space-x-2">
           <div className="flex flex-col items-center justify-center">
             <Link
               href="/booking"
@@ -125,11 +135,11 @@ function BookingPage({ searchParams }: { searchParams: { step: Step } }) {
             >
               {step === "rooms" ? 1 : <Check />}
             </Link>
-            <p className="text-gray-950 mb-2 text-center text-xs">
+            <p className="mb-2 text-xs text-center text-gray-950">
               เลือกห้องพัก
             </p>
           </div>
-          <Separator className="w-full max-w-12 lg:max-w-48 md:max-w-24 mb-8" />
+          <Separator className="w-full mb-8 max-w-12 lg:max-w-48 md:max-w-24" />
           <div className="flex flex-col items-center justify-center">
             <Link
               href="/booking?step=details"
@@ -143,11 +153,11 @@ function BookingPage({ searchParams }: { searchParams: { step: Step } }) {
             >
               {step === "details" || step === "rooms" ? 2 : <Check />}
             </Link>
-            <p className="text-gray-950 mb-2 text-center text-xs">
+            <p className="mb-2 text-xs text-center text-gray-950">
               รายละเอียดการจอง
             </p>
           </div>
-          <Separator className="w-full max-w-12 lg:max-w-48 md:max-w-24 mb-8" />
+          <Separator className="w-full mb-8 max-w-12 lg:max-w-48 md:max-w-24" />
           <div className="flex flex-col items-center justify-center">
             <Link
               href="/booking?step=confirm"
@@ -162,7 +172,7 @@ function BookingPage({ searchParams }: { searchParams: { step: Step } }) {
                 <Check />
               )}
             </Link>
-            <p className="text-gray-950 mb-2 text-center text-xs">
+            <p className="mb-2 text-xs text-center text-gray-950">
               ยืนยันการจอง
             </p>
           </div>
