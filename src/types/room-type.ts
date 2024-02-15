@@ -7,6 +7,7 @@ const schema = z.object({
   price: z.number(),
   capacity: z.number(),
   image: z.string().array(),
+  slug: z.string(),
 });
 
 export type RoomType = z.infer<typeof schema>;
