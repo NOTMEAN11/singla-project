@@ -2,6 +2,9 @@
   "name": "singla",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "node ./prisma/seed.mjs"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -66,6 +69,7 @@
     "postcss": "^8",
     "prisma": "^5.9.1",
     "tailwindcss": "^3.3.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }

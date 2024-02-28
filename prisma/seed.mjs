@@ -1,14 +1,18 @@
-import { hashPassword } from "@/lib/hash";
+import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+
+function hashPassword(password) {
+  return bcrypt.hash(password, 10);
+}
 
 async function main() {
   const admin = await prisma.admin.create({
     data: {
       name: "admin",
       email: "admin@singlaresort.com",
-      password: await hashPassword("adminsingla"),
+      password: await hashPassword("admin"),
     },
   });
 
@@ -123,3 +127,10 @@ async function main() {
     ],
   });
 }
+
+main()
+  .then(() => console.log("Seed data created"))
+  .catch(console.error)
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
