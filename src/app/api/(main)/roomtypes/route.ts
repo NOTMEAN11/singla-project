@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   const rooms = await db.roomType.findMany();
-  return rooms;
+  return NextResponse.json(rooms);
 }
 
 export async function POST(req: Request) {

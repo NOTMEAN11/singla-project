@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,9 +13,19 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
-import { menu, room } from "@/configs/constant";
+import { room, menu } from "@/configs/constant";
+import { RoomType } from "@prisma/client";
 
 function NavbarMenu() {
+  const [roomtype, setRoomType] = useState<RoomType[]>([]);
+
+  useEffect(() => {
+    fetch("/api/roomtypes")
+      .then((res) => res.json())
+      .then((data) => {
+        setRoomType(data);
+      });
+  }, []);
   return (
     <NavigationMenu className="hidden md:block">
       <NavigationMenuList>
@@ -23,12 +33,14 @@ function NavbarMenu() {
           <NavigationMenuTrigger>ห้องพัก</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="w-24">
-              {room.map((item) => (
+              {roomtype.map((item) => (
                 <li
-                  className="p-2 hover:bg-gray-100 text-sm font-normal"
+                  className="p-2 text-xs font-normal hover:bg-gray-100"
                   key={item.name}
                 >
-                  <Link href={item.Link}>{item.name}</Link>
+                  <Link href={"/rooms/" + item.slug}>
+                    {item.name.split("ROOM").join("")}
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -9,7 +9,7 @@ import NavbarDrawer from "./navbar-drawer";
 function Navbar() {
   return (
     <div className="fixed top-0 left-0 w-full bg-white z-[9998]">
-      <div className="flex justify-between items-center py-4 font-bold container">
+      <div className="container flex items-center justify-between py-4 font-bold">
         <Link href="/" className="text-3xl font-bold uppercase">
           Singla
         </Link>

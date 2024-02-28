@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
 import { room } from "@/configs/constant";
-import { cn } from "@/lib/utils";
+import { THB, cn } from "@/lib/utils";
 
 type Props = {
   price: number;
@@ -23,9 +23,9 @@ function RoomCard({ price, name, image, slug, className }: Props) {
         height={683}
         className="object-cover w-full h-72"
       />
-      <div className="space-y-1 my-2">
+      <div className="my-2 space-y-1">
         <h2 className="text-3xl font-bold uppercase">{name}</h2>
-        <p className="text-gray-400 text-sm">ราคา {price} บาท/คืน</p>
+        <p className="text-sm text-gray-400"> {THB(price)} /คืน</p>
       </div>
       <Link
         href={"/rooms/" + slug}
