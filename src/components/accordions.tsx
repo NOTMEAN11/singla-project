@@ -7,9 +7,9 @@ import {
 } from "@/components/ui/accordion";
 
 type Faq = {
-  title: string;
-  content: string;
-  slug: string;
+  question: string;
+  answer: string;
+  id: string;
 };
 
 type Props = {
@@ -20,9 +20,9 @@ function Accordions({ Faq }: Props) {
   return (
     <Accordion type="single" collapsible className="w-full">
       {Faq.map((item, index) => (
-        <AccordionItem value={item.slug} key={index}>
-          <AccordionTrigger>{item.title}</AccordionTrigger>
-          <AccordionContent>{item.content}</AccordionContent>
+        <AccordionItem value={item.id} key={index}>
+          <AccordionTrigger>{item.question}</AccordionTrigger>
+          <AccordionContent>{item.answer}</AccordionContent>
         </AccordionItem>
       ))}
     </Accordion>
