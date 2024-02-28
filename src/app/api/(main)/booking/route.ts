@@ -103,6 +103,7 @@ export async function POST(req: Request) {
       }),
       userEmail: result.data.email,
       total: result.data.totalPrice,
+      link: `http://localhost:3000/payment/inform-payment/${booking.id}`,
     }),
   });
 
