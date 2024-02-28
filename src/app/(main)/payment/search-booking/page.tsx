@@ -6,7 +6,12 @@ import PageWrapper from "@/components/wrapper/page-wrapper";
 import { Input } from "@/components/ui/input";
 import SearchBookingSection from "@/components/section/search-booking/search";
 
-function SearchBookingPage() {
+function SearchBookingPage({
+  searchParams,
+}: {
+  searchParams: { bookingId: string };
+}) {
+  console.log(searchParams.bookingId);
   return (
     <PageWrapper className="mt-20">
       <ContainerWrapper>
@@ -19,7 +24,7 @@ function SearchBookingPage() {
           //   disableTitle
         />
         <div>
-          <SearchBookingSection />
+          <SearchBookingSection bookingId={searchParams.bookingId} />
         </div>
       </ContainerWrapper>
     </PageWrapper>
