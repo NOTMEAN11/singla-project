@@ -33,16 +33,18 @@ function NavbarMenu() {
           <NavigationMenuTrigger>ห้องพัก</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="w-24">
-              {roomtype.map((item) => (
-                <li
-                  className="p-2 text-xs font-normal hover:bg-gray-100"
-                  key={item.name}
-                >
-                  <Link href={"/rooms/" + item.slug}>
-                    {item.name.split("ROOM").join("")}
-                  </Link>
-                </li>
-              ))}
+              {[...roomtype.slice(0, 2), { name: "ทั้งหมด", slug: "" }].map(
+                (item) => (
+                  <li
+                    className="p-2 text-xs font-normal hover:bg-gray-100"
+                    key={item.name}
+                  >
+                    <Link href={"/rooms/" + item.slug}>
+                      {item.name.split("ROOM").join("")}
+                    </Link>
+                  </li>
+                )
+              )}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>

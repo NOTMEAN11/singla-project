@@ -1,5 +1,3 @@
-"use client";
-import React, { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,18 +8,9 @@ import {
 } from "@/components/ui/sheet";
 import { BiMenu } from "react-icons/bi";
 import Link from "next/link";
-import { RoomType } from "@prisma/client";
+import { buttonVariants } from "@/components/ui/button";
 
 function NavbarDrawer() {
-  const [roomtype, setRoomType] = useState<RoomType[]>([]);
-
-  useEffect(() => {
-    fetch("/api/roomtypes")
-      .then((res) => res.json())
-      .then((data) => {
-        setRoomType(data);
-      });
-  }, []);
   return (
     <Sheet>
       <SheetTrigger className="block md:hidden">
@@ -32,13 +21,18 @@ function NavbarDrawer() {
           <SheetTitle className="p-2">SINGLA</SheetTitle>
           <ul>
             <li className="p-2 text-sm hover:bg-gray-100">
-              <Link href="/rooms">ห้องพัก</Link>
+              <Link href="/rooms">ห้องพักทั้งหมด</Link>
             </li>
-            {roomtype.map((item) => (
-              <li className="p-2 text-sm hover:bg-gray-100" key={item.name}>
-                <Link href={"/rooms/" + item.slug}>{item.name}</Link>
-              </li>
-            ))}
+            <li className="p-2 text-sm hover:bg-gray-100">
+              <Link href="/promotions">โปรโมชั่น</Link>
+            </li>
+            <li className="p-2 text-sm hover:bg-gray-100">
+              <Link href="/contact-us">ติดต่อเรา</Link>
+            </li>
+
+            <li className={buttonVariants({ className: "w-full mt-1" })}>
+              <Link href="/booking">จองเลย</Link>
+            </li>
           </ul>
         </SheetHeader>
       </SheetContent>
