@@ -1,31 +1,49 @@
 "use client";
 
 import React from "react";
-import "swiper/css";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import "swiper/css/navigation";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import Image from "next/image";
+import Autoplay from "embla-carousel-autoplay";
 
 type Props = {
   images: string[];
 };
 
 function ImageSlider({ images }: Props) {
-  const swiper = useSwiper();
   return (
-    <Swiper
-      className="w-full h-full"
-      navigation={true}
-      modules={[Navigation]}
-      loop={true}
+    <Carousel
+      opts={{ loop: true }}
+      className="w-full h-full max-w-4xl"
+      plugins={[
+        Autoplay({
+          delay: 2000,
+        }),
+      ]}
     >
-      {images.map((images, index) => (
-        <SwiperSlide key={index}>
-          <Image src={images} alt={`รูปที่{index}`} height={480} width={1400} />
-        </SwiperSlide>
-      ))}
-    </Swiper>
+      <CarouselContent>
+        {images.map((image, index) => (
+          <CarouselItem
+            key={index}
+            className="flex items-center justify-center"
+          >
+            <Image
+              src={image}
+              alt={"รูปที่ " + index}
+              width={1024}
+              height={480}
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious className="hidden md:flex" />
+      <CarouselNext className="hidden md:flex" />
+    </Carousel>
   );
 }
 
