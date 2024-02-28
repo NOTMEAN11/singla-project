@@ -21,7 +21,7 @@ import "./style.css";
 import { THB } from "@/lib/utils";
 
 type Props = {
-  username?: string;
+  name?: string;
   userImage?: string;
   userEmail?: string;
   title: string;
@@ -32,14 +32,15 @@ type Props = {
   roomType: string;
   discount: number;
   total: number;
+  link: string;
 };
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "";
 
-export const VercelInviteUserEmail = ({
-  username,
+export const SinglaBooking = ({
+  name,
   userImage,
   userEmail,
   title,
@@ -50,8 +51,9 @@ export const VercelInviteUserEmail = ({
   roomType,
   discount,
   total,
+  link,
 }: Props) => {
-  const previewText = `Join ${username} on Vercel`;
+  const previewText = `เรียนคุณ ${name}`;
 
   return (
     <Html>
@@ -78,7 +80,7 @@ export const VercelInviteUserEmail = ({
               {title}
             </Heading>
             <Text className="text-black text-[14px] leading-[24px]">
-              เรียนคุณ {username},
+              เรียนคุณ {name},
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
               ทางเราได้รับข้อมูลการจองห้องพักของท่านจาก<strong> SINGLA</strong>{" "}
@@ -147,7 +149,7 @@ export const VercelInviteUserEmail = ({
             <Section className="text-center mt-[32px] mb-[32px]">
               <Button
                 className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
-                href={"#"}
+                href={link}
               >
                 ชำระเงิน
               </Button>
@@ -207,8 +209,8 @@ const informationTableValue = {
   lineHeight: 1.4,
 };
 
-VercelInviteUserEmail.PreviewProps = {
-  username: "alan turing",
+SinglaBooking.PreviewProps = {
+  name: "alan turing",
   userImage: `${baseUrl}/static/vercel-user.png`,
   userEmail: "test@test.com",
   title: "ชำระเงินค่าห้องพัก",
@@ -219,6 +221,7 @@ VercelInviteUserEmail.PreviewProps = {
   roomType: "Standard",
   discount: 100,
   total: 1000,
+  link: "#",
 } as Props;
 
-export default VercelInviteUserEmail;
+export default SinglaBooking;
