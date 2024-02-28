@@ -1,83 +1,25 @@
 import HeroSection from "@/components/section/herosection";
-import { Button } from "@/components/ui/button";
+import db from "@/configs/db";
 import PageWrapper from "@/components/wrapper/page-wrapper";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import RoomCard from "@/components/card/room-card";
-import Footer from "@/components/layouts/footer/footer";
+
 import ContainerWrapper from "@/components/wrapper/container-wrapper";
 import Accordions from "@/components/accordions";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 
-type Room = {
-  price: number;
-  name: string;
-  image: string;
-  slug: string;
-};
+async function GetData() {
+  const faqs = await db.faq.findMany();
+  const roomType = await db.roomType.findMany();
 
-type faqs = {
-  question: string;
-  answer: string;
-  id: string;
-};
-
-const rooms: Room[] = [
-  {
-    name: "SUPERIOR ROOM",
-    price: 1500,
-    image: "/assets/rooms/room1.2.jpg",
-    slug: "superior-room",
-  },
-  {
-    name: "DELUXE ROOM",
-    price: 2000,
-    image: "/assets/rooms/room2.2.jpg",
-    slug: "deluxe-room",
-  },
-  {
-    name: "FAMILY ROOM",
-    price: 3000,
-    image: "/assets/rooms/room3.jpg",
-    slug: "family-room",
-  },
-  {
-    name: "POOL SUITE",
-    price: 4000,
-    image: "/assets/rooms/room4.2.jpg",
-    slug: "pool-suite",
-  },
-];
-
-const Faq: faqs[] = [
-  {
-    question:
-      "SINGLA รีสอร์ท สามารถเลื่อนการเข้าพักได้หรือไม่? มีค่าใช้จ่ายเพิ่มเติมหรือไม่?",
-    answer:
-      "หากคุณทำการจองผ่านเว็บไซด์ของรีสอร์ท คุณสามารถเลื่อนวันเข้าพักผ่านเว็บไซด์ของรีสอร์ทได้ ขึ้นอยู่กับข้อกำหนดและเงื่อนไขของโปรโมชั่นที่ระบุในการจองของคุณ สำหรับการจองผ่านช่องทางอื่นๆ ต้องทำการยกเลิกผ่านช่องทางนั้นเท่านั้น",
-    id: "faded-stay",
-  },
-  {
-    question: "เวลาเช็คอินและเช็คเอาท์ ของ SINGLA รีสอร์ท?",
-    answer: "เช็คอินเวลา 14.00 น. เช็คเอ๊าท์เวลา 12.00 น.",
-    id: "check-in-out",
-  },
-  {
-    question: "ให้บริการอาหารเช้าที่ใหน ตั้งแต่เวลากี่โมง?",
-    answer:
-      "บุฟเฟ่ต์อาหารเช้าให้บริการที่ห้องเฮอลิเทจ คาเฟ่ ชั้นล๊อบบี้ ตั้งแต่เวลา 06.00 - 10.00 น.",
-    id: "food",
-  },
-  {
-    question: "ราคาที่แสดงบนเว็บไซด์เป็นราคาก่อนหรือหลังลดราคาแล้ว?",
-    answer:
-      "ราคาที่แสดงบนเว็บไซด์เป็นราคาที่ลดราคาแล้ว โดยไม่มีค่าใช้จ่ายเพิ่มเติมอื่นๆ และค่าธรรมเนียมการจองใดๆ อีก เมื่อทำการจองผ่านเว็บไซด์ของโรงแรม",
-    id: "price",
-  },
-];
+  return {
+    faqs,
+    roomType,
+  };
+}
 
 export default async function Home() {
+  const { faqs, roomType } = await GetData();
   return (
     <PageWrapper>
       <ContainerWrapper>
@@ -114,11 +56,11 @@ export default async function Home() {
             {/* <Separator className="my-2 w-80" /> */}
           </div>
           <div className="grid grid-cols-1 gap-4 my-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center">
-            {rooms.map((room) => (
+            {roomType.map((room) => (
               <RoomCard
                 name={room.name}
                 price={room.price}
-                image={room.image}
+                image={room.image[0]}
                 slug={room.slug}
                 key={room.slug}
                 className="w-full"
@@ -129,7 +71,7 @@ export default async function Home() {
             <div className="flex flex-col items-center justify-center mb-6">
               <h1 className="text-4xl text-yellow-600">คำถามที่พบบ่อย</h1>
             </div>
-            <Accordions Faq={Faq} />
+            <Accordions Faq={faqs} />
           </div>
         </div>
       </ContainerWrapper>
