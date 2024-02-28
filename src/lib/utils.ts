@@ -25,10 +25,6 @@ export function THB(amount: number) {
 }
 
 export function formatPhoneNumber(phoneNumber: string) {
-  if (typeof phoneNumber !== "string" || phoneNumber.length !== 10) {
-    throw new Error("Invalid phone number");
-  }
-
   return (
     phoneNumber.slice(0, 3) +
     "-" +
