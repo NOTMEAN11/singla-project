@@ -6,6 +6,7 @@ import { BiChevronRight } from "react-icons/bi";
 
 type TBreadcrumb = {
   breadcrumb?: { title?: string; path: string }[];
+  backoffice?: boolean;
 };
 
 function Breadcrumb({
@@ -50,8 +51,8 @@ function BreadcrumbItem({
   );
 }
 
-function Breadcrumbs({ breadcrumb }: TBreadcrumb): ReactElement {
-  const home = [{ title: "หน้าแรก", path: "/" }];
+function Breadcrumbs({ breadcrumb, backoffice }: TBreadcrumb): ReactElement {
+  const home = [{ title: "หน้าแรก", path: backoffice ? "/backoffice" : "/" }];
   return (
     <Breadcrumb>
       {(breadcrumb ? [...home, ...breadcrumb] : home).map((item, index) => (
