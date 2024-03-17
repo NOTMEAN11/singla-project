@@ -1,9 +1,73 @@
-import { writeFile } from "fs/promises";
+import { writeFile, rename } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import SinglaPaid from "../../../../../emails/paid";
+import { Booking } from "@prisma/client";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+async function slipsUpload(file: File, booking: Booking) {
+  const bytes = await file.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+  const path = `./public/slips/${booking.id + " - " + file.name}`;
+
+  await writeFile(path, buffer);
+}
+
+async function verifySlip(file: File, amount: number, booking: Booking) {
+  const formData = new FormData();
+  formData.set("files", file);
+
+  const res = await fetch("https://api.slipok.com/api/line/apikey/15589", {
+    method: "POST",
+    headers: {
+      "x-authorization": "SLIPOK3RACKLT",
+    },
+    body: formData,
+  });
+
+  const slip = await res.json();
+  console.log(slip);
+
+  if (!slip.data.success) {
+    return {
+      message: "ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
+      status: "error",
+    };
+  }
+
+  if (slip.data.amount !== amount) {
+    return {
+      message: "จำนวนเงินไม่ตรงกับที่โอน",
+      status: "error",
+      amount: slip.data.amount,
+    };
+  }
+
+  if (slip.data.receiver.name !== "THANABOON T")
+    return {
+      message: "ชื่อผู้รับเงินไม่ตรงกับที่โอน",
+      status: "error",
+    };
+
+  const { data: email, error } = await resend.emails.send({
+    from: "noreply@singlaresort.com",
+    to: booking.email,
+    subject: "ชำระเงินสำเร็จ",
+    react: SinglaPaid({
+      name: booking.name,
+      title: "ชำระเงินค่าห้องพักสำเร็จ",
+      text: "ระบบได้ทำการจองห้องพักของท่านเรียบร้อยแล้ว ขอขอบคุณที่ท่านได้เลือกที่พักกับเรา",
+      userEmail: booking.email,
+      link: `http://localhost:3000/payment/search-booking?bookigId=${booking.id}`,
+    }),
+  });
+
+  return {
+    message: "ทำรายการสำเร็จ",
+    status: "success",
+  };
+}
 
 export async function POST(request: NextRequest) {
   const thb = request.headers.get("x-amount");
@@ -38,50 +102,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
+  const verify = await verifySlip(file, amount, booking);
 
-  // With the file data in the buffer, you can do whatever you want with it.
-  // For this, we'll just write it to the filesystem in a new location
-  const path = `./public/slips/${booking.name + "-" + booking.id + file.name}`;
-  await writeFile(path, buffer);
-  console.log(`open ${path} to see the uploaded file`);
-  console.log(amount);
-
-  const formData = new FormData();
-  formData.set("files", file);
-
-  const res = await fetch("https://api.slipok.com/api/line/apikey/15589", {
-    method: "POST",
-    headers: {
-      "x-authorization": "SLIPOK3RACKLT",
-    },
-    body: formData,
-  });
-
-  const slip = await res.json();
-  console.log(slip);
-
-  if (!slip.data.success)
-    return NextResponse.json({
-      message: "ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
-      status: "error",
-    });
-
-  if (slip.data.amount !== amount) {
-    return NextResponse.json({
-      message: "จำนวนเงินไม่ตรงกับที่โอน",
-      status: "error",
-      amount: slip.data.amount,
-    });
-  }
-
-  if (slip.data.receiver.name !== "THANABOON T")
-    return NextResponse.json({
-      message: "ชื่อผู้รับเงินไม่ตรงกับที่โอน",
-      status: "error",
-    });
-
+  await slipsUpload(file, booking);
   await db.booking.update({
     where: {
       id: bookingId as string,
@@ -91,21 +114,5 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  const { data: email, error } = await resend.emails.send({
-    from: "noreply@singlaresort.com",
-    to: booking.email,
-    subject: "ชำระเงินสำเร็จ",
-    react: SinglaPaid({
-      name: booking.name,
-      title: "ชำระเงินค่าห้องพักสำเร็จ",
-      text: "ระบบได้ทำการจองห้องพักของท่านเรียบร้อยแล้ว ขอขอบคุณที่ท่านได้เลือกที่พักกับเรา",
-      userEmail: booking.email,
-      link: `http://localhost:3000/payment/search-booking?bookigId=${booking.id}`,
-    }),
-  });
-
-  return NextResponse.json({
-    message: "ทำรายการสำเร็จ",
-    status: "success",
-  });
+  return NextResponse.json(verify);
 }
