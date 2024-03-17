@@ -45,6 +45,11 @@ function Dropzone({ amount, bookingId }: Props) {
     });
     const data = await res.json();
 
+    if (data.status === "error") {
+      setFiles([]);
+      return toast.error(data.message);
+    }
+
     if (!res.ok) {
       setFiles([]);
       return toast.error(data.message);

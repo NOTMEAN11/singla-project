@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
   });
 
   const slip = await res.json();
+  console.log(slip);
 
   if (!slip.data.success)
     return NextResponse.json({
