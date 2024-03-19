@@ -38,3 +38,8 @@ next-env.d.ts
 
 # Prisma 
 prisma/migrations
+
+# lockfile
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
