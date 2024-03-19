@@ -11,13 +11,16 @@ import {
   ChevronsLeft,
   ChevronsRight,
   HomeIcon,
+  Image,
   LogOut,
   Settings,
+  Tags,
 } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { ModeToggle } from "../../toggle-theme";
+import { usePathname } from "next/navigation";
 
 const variants: Variants = {
   close: {
@@ -45,7 +48,7 @@ const menu = [
   {
     title: "ห้องพัก",
     icon: <BedSingle size={14} />,
-    link: "/booking",
+    link: "/rooms",
   },
   {
     title: "การจอง",
@@ -58,6 +61,17 @@ const menu = [
     link: "/report",
   },
   {
+    title: "คลังภาพ",
+    // eslint-disable-next-line jsx-a11y/alt-text
+    icon: <Image size={14} />,
+    link: "/image",
+  },
+  {
+    title: "โปรโมชั่น",
+    icon: <Tags size={14} />,
+    link: "/promotion",
+  },
+  {
     title: "ตั้งค่า",
     icon: <Settings size={14} />,
     link: "/setting",
@@ -65,22 +79,28 @@ const menu = [
 ];
 
 function SideBar() {
+  const path = usePathname();
+  const pathName = path.split("backoffice")[1];
+  const session = useSession();
+
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <motion.aside
       variants={variants}
+      initial="close"
       animate={isOpen ? "open" : "close"}
       className="w-full h-screen max-w-[15rem] relative border-r overflow-y-auto"
     >
       <div className="flex items-center justify-between p-4 border-b ">
-        <div
-          className="font-bold cursor-pointer"
+        <button
+          disabled={session.status !== "authenticated"}
+          className="font-bold"
           onClick={() => setIsOpen(!isOpen)}
         >
           <p className="text-xs">ระบบจัดการ</p>
           SINGLA
-        </div>
+        </button>
 
         {isOpen ? (
           <ChevronsLeft
@@ -95,8 +115,13 @@ function SideBar() {
           />
         )}
       </div>
-      {isOpen && (
-        <div className="h-full ">
+      {isOpen ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isOpen ? 1 : 0 }}
+          transition={{ duration: 0.5 }}
+          className="h-full "
+        >
           {menu.map((item, index) => (
             <Link
               key={index}
@@ -104,7 +129,8 @@ function SideBar() {
                 buttonVariants({
                   variant: "ghost",
                 }),
-                "flex items-center justify-start w-full"
+                "flex items-center justify-start w-full",
+                pathName === item.link && "bg-accent"
               )}
               href={"/backoffice" + item.link}
             >
@@ -123,6 +149,37 @@ function SideBar() {
             <LogOut size={14} /> <h4 className="ml-2">ออกจากระบบ</h4>
           </div>
           <ModeToggle />
+        </motion.div>
+      ) : (
+        <div className="h-full ">
+          {menu.map((item, index) => (
+            <Link
+              key={index}
+              className={cn(
+                buttonVariants({
+                  variant: "ghost",
+                }),
+                "flex items-center ",
+                pathName === item.link && "bg-accent",
+                !session.data && "hidden"
+              )}
+              href={"/backoffice" + item.link}
+            >
+              {item.icon}
+            </Link>
+          ))}
+          <div
+            className={cn(
+              buttonVariants({
+                variant: "ghost",
+              }),
+              "flex items-center cursor-pointer",
+              !session.data && "hidden"
+            )}
+            onClick={() => signOut()}
+          >
+            <LogOut size={14} />
+          </div>
         </div>
       )}
     </motion.aside>
