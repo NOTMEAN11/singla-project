@@ -40,7 +40,7 @@ function BreadcrumbItem({
     <div className={cn("flex items-center space-x-2", className)}>
       <Link
         href={href}
-        className="w-full max-w-[200px] truncate rounded-md p-1 text-xs transition-colors duration-300 hover:bg-gray-100 sm:max-w-full "
+        className="w-full max-w-[200px] truncate rounded-md p-1 text-xs transition-colors duration-300 hover:bg-accent sm:max-w-full "
       >
         {children}
       </Link>
