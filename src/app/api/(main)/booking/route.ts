@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
   const roomType = await db.roomType.findFirst({
     where: {
-      id: result.data.roomTypeId,
+      id: result.data?.roomTypeId,
     },
   });
 
@@ -44,14 +44,50 @@ export async function POST(req: Request) {
       }
     );
 
-  const room = await db.room.findFirst({
+  // const room = await db.room.findFirst({
+  //   where: {
+  //     roomTypeId: result.data.roomTypeId,
+  //     status: "available",
+  //   },
+  //   include: {
+  //     bookings: true,
+  //   },
+  // });
+
+  const checkAvailableRoom = await db.room.findFirst({
     where: {
-      roomTypeId: result.data.roomTypeId,
-      status: "available",
+      roomTypeId: roomType.id, // Filter by correct room type
+      AND: [
+        {
+          bookings: {
+            none: {
+              OR: [
+                {
+                  checkIn: {
+                    lte: result.data.checkOut,
+                  },
+                  checkOut: {
+                    gte: result.data.checkIn,
+                  },
+                },
+                {
+                  AND: [
+                    { checkIn: { gt: result.data.checkOut } },
+                    { checkOut: { lt: result.data.checkIn } },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+        {
+          bookings: { none: {} }, // Ensure the room has no bookings at all
+        },
+      ],
     },
   });
 
-  if (!room)
+  if (!checkAvailableRoom)
     return NextResponse.json(
       { message: "ไม่พบห้องพักที่ว่าง กรุณาทำรายการใหม่", status: "not-found" },
       {
@@ -59,21 +95,12 @@ export async function POST(req: Request) {
       }
     );
 
-  const update_room = await db.room.update({
-    where: {
-      id: room?.id,
-    },
-    data: {
-      status: "unavailable",
-    },
-  });
-
   const booking = await db.booking.create({
     data: {
       ...rest,
       room: {
         connect: {
-          id: room?.id,
+          id: checkAvailableRoom?.id,
         },
       },
     },
@@ -109,6 +136,7 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     resend: { data, error },
+    // room: { checkAvailableRoom },
     message: "สร้างการจองสำเร็จ",
     status: "success",
   });

@@ -31,6 +31,10 @@ function BookingInfo({ roomtype }: Props) {
   const timeDifference = checkOutDateObj.getTime() - checkInDateObj.getTime();
   const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
 
+  const todayDate = new Date().setHours(0, 0, 0, 0);
+  const diffToday = checkOutDateObj.getTime() - new Date(todayDate).getTime();
+  const checkSameDay = diffToday / (1000 * 60 * 60 * 24);
+
   const motocycle = daysDifference > 4 ? 1400 : 350 * daysDifference;
   const shuttle = 300 * guest!.adults + guest!.children * 150;
   const buffet = 199 * guest!.adults + guest!.children * 99;
@@ -53,6 +57,16 @@ function BookingInfo({ roomtype }: Props) {
     price += vat;
     return { price, vat };
   }
+
+  useEffect(() => {
+    if (checkSameDay === 0) {
+      toast.error("เช็คเอ้าท์ไม่สามารถเลือกวันเดียวกับเช็คอิน");
+      router.push("/booking");
+    } else if (checkSameDay < 0) {
+      toast.error("เช็คเอ้าท์ไม่สามารถเลือกวันก่อนหน้า");
+      router.push("/booking");
+    }
+  }, [checkSameDay, router]);
 
   const totalPrice = THB(getTotalPrice().price);
   const feePrice = THB(fee);

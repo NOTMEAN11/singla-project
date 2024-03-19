@@ -32,7 +32,7 @@ export function DatePicker({}: Props) {
             !date && "text-muted-foreground"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
+          <CalendarIcon className="w-4 h-4 mr-2" />
           {date ? format(date, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
@@ -54,7 +54,9 @@ export function DatePickerWithRange({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const { setCheckInDate, setCheckOutDate } = useBookingStore();
 
-  const today = new Date();
+  const time = new Date().setHours(0, 0, 0, 0);
+  const today = new Date(time);
+
   const [date, setDate] = useState<DateRange | undefined>({
     from: today,
     to: addDays(today, 1),
@@ -64,8 +66,6 @@ export function DatePickerWithRange({
     setCheckInDate(date?.from);
     setCheckOutDate(date?.to);
   }, [date, setCheckInDate, setCheckOutDate]);
-
-  console.log(date);
 
   return (
     <div className={cn("grid gap-2")}>
@@ -80,7 +80,7 @@ export function DatePickerWithRange({
               className
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarIcon className="w-4 h-4 mr-2" />
             {date?.from ? (
               date.to ? (
                 <>
@@ -91,7 +91,7 @@ export function DatePickerWithRange({
                 format(date.from, "LLL dd, y", { locale: th })
               )
             ) : (
-              <span className="text-black font-medium">
+              <span className="font-medium text-black">
                 โปรดเลือกวันที่เช็คอิน - เช็คเอ้าท์
               </span>
             )}
@@ -116,7 +116,7 @@ export function DatePickerWithRange({
             onSelect={setDate}
             locale={th}
             numberOfMonths={1}
-            className="lg:hidden block"
+            className="block lg:hidden"
           />
         </PopoverContent>
       </Popover>

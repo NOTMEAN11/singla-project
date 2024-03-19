@@ -27,7 +27,7 @@ function BookingSection({ roomtype }: Props) {
 
   const router = useRouter();
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!room) {
       toast.error("โปรดเลือกประเภทห้องพัก");
       return;
@@ -40,6 +40,23 @@ function BookingSection({ roomtype }: Props) {
 
     if (guest?.adults === 0) {
       toast.error("โปรดเลือกจำนวนผู้พัก");
+      return;
+    }
+    const res = await fetch("/api/booking/checking-room", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        checkInDate: checkInDate,
+        checkOutDate: checkOutDate,
+        room: room,
+      }),
+    });
+
+    const data = await res.json();
+    if (data.status === "error") {
+      toast.error(data.message);
       return;
     }
 

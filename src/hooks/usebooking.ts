@@ -21,15 +21,15 @@ type BookingStoreActions = {
   reset: () => void;
 };
 const fee = 500; // TODO: เพิ่มค่าบริการจาก Server
-const today = new Date();
-const tomorrow = new Date(today);
+const today = new Date().setHours(0, 0, 0, 0);
+const tomorrow = new Date(today).setHours(24, 0, 0, 0);
 
 const useBookingStore = create<BookingStoreActions>()(
   persist(
     (set, get) => ({
       room: null,
-      checkInDate: today,
-      checkOutDate: tomorrow,
+      checkInDate: new Date(today),
+      checkOutDate: new Date(tomorrow),
       guest: { adults: 0, children: 0 },
       fee,
       options: {
