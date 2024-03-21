@@ -90,7 +90,7 @@ function SideBar() {
       variants={variants}
       initial="close"
       animate={isOpen ? "open" : "close"}
-      className="w-full h-screen max-w-[15rem] relative border-r overflow-y-auto"
+      className="w-full h-full min-h-screen max-w-[15rem] border-r bg-primary-foreground"
     >
       <div className="flex items-center justify-between p-4 border-b ">
         <button

@@ -7,7 +7,7 @@ type Props = {
 };
 
 function PageWrapper({ children, className }: Props) {
-  return <div className={cn("p-4", className)}>{children}</div>;
+  return <div className={cn("p-4 ", className)}>{children}</div>;
 }
 
 export default PageWrapper;

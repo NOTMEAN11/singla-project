@@ -15,7 +15,7 @@ export default function BackofficeRootLayout({
 }) {
   return (
     <html>
-      <body className="h-full">
+      <body className="h-full bg-accent">
         <AuthSessionProvider>
           <ThemeProvider
             attribute="class"
