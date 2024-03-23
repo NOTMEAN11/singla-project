@@ -17,6 +17,10 @@ import { redirect } from "next/navigation";
 import React from "react";
 import db from "@/configs/db";
 import StatusChart from "@/components/backoffice/section/mainpage/status-chart";
+import BookingChart from "@/components/backoffice/section/mainpage/booking-chart";
+import { findDateMonth } from "@/lib/utils";
+import { room } from "@/configs/constant";
+import { calculateMonthlyStats } from "@/lib/filter";
 
 async function GetData() {
   const room = await db.room.count({
@@ -43,6 +47,7 @@ async function GetData() {
       ],
     },
   });
+
   const checkin = await db.booking.count({
     where: {
       status: "checkin",
@@ -54,10 +59,21 @@ async function GetData() {
     },
   });
 
+  const monthlyStats = await db.booking.findMany({
+    where: {
+      OR: [{ status: "paid" }, { status: "checkin" }, { status: "checkout" }],
+    },
+    select: {
+      totalPrice: true,
+      checkIn: true,
+    },
+  });
+
   return {
     rooms,
     room,
     booking,
+    monthlyStats,
     checkin,
     checkout,
   };
@@ -113,9 +129,12 @@ async function BackofficeMainPage() {
     },
   ];
 
+  const filter = calculateMonthlyStats(data.monthlyStats);
+
   if (!session) {
     return redirect("/backoffice/signin");
   }
+
   return (
     <PageWrapper>
       <PageHeader breadcrumb={[]} title="ภาพรวม" />
@@ -125,7 +144,7 @@ async function BackofficeMainPage() {
             key={index}
             className="flex items-center w-full max-w-md p-2 space-x-2 rounded-md"
           >
-            <div className="p-3 border rounded">{item.icon}</div>
+            <div className="p-3 border rounded">{item.icon} </div>
 
             <div className="text-primary">
               <h1 className="text-sm">{item.title}</h1>
@@ -137,6 +156,7 @@ async function BackofficeMainPage() {
         ))}
       </div>
       <div className="grid grid-cols-4 gap-4 my-2">
+        <BookingChart data={filter} className="col-span-3" />
         <StatusChart data={chartData} />
       </div>
     </PageWrapper>

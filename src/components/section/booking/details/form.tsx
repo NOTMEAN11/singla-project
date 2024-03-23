@@ -54,15 +54,6 @@ function BookingForm() {
       return;
     }
 
-    if (
-      !(checkInDate instanceof Date) ||
-      checkInDate.getDate() < today.getDate()
-    ) {
-      toast.error("โปรดเลือกวันที่เช็คอินใหม่");
-      router.push("/booking");
-      return;
-    }
-
     setInfo({
       name: `${values.firstName} ${values.lastName}`,
       email: values.email,

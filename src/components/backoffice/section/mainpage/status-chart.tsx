@@ -21,8 +21,9 @@ function StatusChart({ data }: Props) {
     <Card className="w-full rounded">
       <CardContent>
         <p className="mt-4 font-bold">สถานะห้องพัก</p>
+        <p className="text-xs text-muted-foreground">สรุปสถานะห้องพักทั้งหมด</p>
         <div className="h-[265px] flex items-center justify-center flex-col">
-          <ResponsiveContainer width={250} height={250}>
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart width={250} height={250}>
               <Pie
                 data={data}
@@ -43,7 +44,6 @@ function StatusChart({ data }: Props) {
           <div className="flex items-center mx-4 space-x-4 text-xs">
             <div className="flex items-center space-x-1">
               <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-
               <p>ว่าง</p>
             </div>
             <div className="flex items-center space-x-1">

@@ -55,11 +55,7 @@ const menu = [
     icon: <CalendarDays size={14} />,
     link: "/booking",
   },
-  {
-    title: "รายงาน",
-    icon: <BarChart3 size={14} />,
-    link: "/report",
-  },
+
   {
     title: "คลังภาพ",
     // eslint-disable-next-line jsx-a11y/alt-text
@@ -70,11 +66,6 @@ const menu = [
     title: "โปรโมชั่น",
     icon: <Tags size={14} />,
     link: "/promotion",
-  },
-  {
-    title: "ตั้งค่า",
-    icon: <Settings size={14} />,
-    link: "/setting",
   },
 ];
 
