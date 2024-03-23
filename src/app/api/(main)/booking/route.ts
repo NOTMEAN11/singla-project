@@ -80,9 +80,7 @@ export async function POST(req: Request) {
             },
           },
         },
-        {
-          bookings: { none: {} }, // Ensure the room has no bookings at all
-        },
+        { status: "available" },
       ],
     },
   });
