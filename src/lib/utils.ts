@@ -35,7 +35,7 @@ export function formatPhoneNumber(phoneNumber: string) {
 }
 
 export function findDateMonth(date: Date): number {
-  const dateMonth = new Date(date).getMonth() + 1;
+  const dateMonth = new Date(date).getMonth();
 
   return dateMonth;
 }

@@ -21,7 +21,7 @@ export function calculateMonthlyStats(
     { name: "พ.ย.", value: 11 },
     { name: "ธ.ค.", value: 12 },
   ];
-  for (let i = 1; i <= 11; i++) {
+  for (let i = 0; i <= 11; i++) {
     const filteredData = data.filter(
       (booking) => findDateMonth(booking.checkIn) === i
     );
