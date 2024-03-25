@@ -1,6 +1,6 @@
 "use client";
 import { buttonVariants } from "@/components/ui/button";
-import { roomtype } from "@/configs/constant";
+
 import useBookingStore from "@/hooks/usebooking";
 import { RoomType } from "@/types/room-type";
 import { format } from "date-fns";
