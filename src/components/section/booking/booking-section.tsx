@@ -26,16 +26,9 @@ import {
 } from "@/components/ui/table";
 
 import { RoomType } from "@/types/room-type";
-import { format } from "date-fns";
-import { th } from "date-fns/locale/th";
+
 import { THB } from "@/lib/utils";
-import {
-  BiShower,
-  BiSolidTShirt,
-  BiSolidTree,
-  BiSquare,
-  BiUser,
-} from "react-icons/bi";
+import { BiShower, BiSolidTShirt, BiSquare } from "react-icons/bi";
 import HoverIcon from "@/components/hover-icon";
 
 type Props = {
@@ -185,11 +178,18 @@ function BookingSection({ roomtype }: Props) {
   useEffect(() => {
     async function fetchRooms(
       room: string,
-      checkInDate: number,
-      checkOutDate: number
+      checkInDate: Date | undefined,
+      checkOutDate: Date | undefined
     ) {
+      if (!room || !checkInDate || !checkOutDate) {
+        return;
+      }
+
+      const checkIn = checkInDate.getTime();
+      const checkOut = checkOutDate.getTime();
+
       const res = await fetch(
-        `/api/roomtypes?type=${room}&checkIn=${checkInDate}&checkOut=${checkOutDate}`
+        `/api/roomtypes?type=${room}&checkIn=${checkIn}&checkOut=${checkOut}`
       );
 
       if (!res.ok) {
@@ -205,10 +205,9 @@ function BookingSection({ roomtype }: Props) {
       }
       setRooms(data);
     }
-    fetchRooms(room!, checkInDate?.getTime()!, checkOutDate?.getTime()!);
+    fetchRooms(room!, checkInDate, checkOutDate);
   }, [room, checkInDate, checkOutDate]);
 
-  console.log(rooms);
   return (
     <>
       <div className="grid w-full grid-cols-1 p-2 space-y-2 border lg:hidden">
