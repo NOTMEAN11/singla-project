@@ -2,17 +2,17 @@
 import Link from "next/link";
 import HoverIcon from "@/components/hover-icon";
 import useBookingStore from "@/hooks/usebooking";
-import { roomtype } from "@/configs/constant";
+
 import { THB } from "@/lib/utils";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { th } from "date-fns/locale/th";
 import { InfoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { RoomType } from "@/types/room-type";
 
 type Props = {
