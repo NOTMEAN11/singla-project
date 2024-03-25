@@ -59,7 +59,7 @@ async function verifySlip(file: File, amount: number, booking: Booking) {
       title: "ชำระเงินค่าห้องพักสำเร็จ",
       text: "ระบบได้ทำการจองห้องพักของท่านเรียบร้อยแล้ว ขอขอบคุณที่ท่านได้เลือกที่พักกับเรา",
       userEmail: booking.email,
-      link: `http://localhost:3000/payment/search-booking?bookigId=${booking.id}`,
+      link: `http://localhost:3000/payment/search-booking?bookingId=${booking.id}`,
     }),
   });
 

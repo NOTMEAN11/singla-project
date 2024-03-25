@@ -1,15 +1,22 @@
 import db from "@/configs/db";
+import { authOptions } from "@/lib/auth";
 import { hashPassword } from "@/lib/hash";
 import { adminSchema } from "@/types/admin";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
+  res: NextResponse,
   { params }: { params: { id: string } }
 ) {
+  const session = await getServerSession(authOptions);
+
   const { id } = params;
   const body = await req.json();
   const result = adminSchema.safeParse(body);
+
+  if (!session) return NextResponse.json("Unauthorized", { status: 401 });
 
   if (!result.success)
     return NextResponse.json("กรอกข้อมูลให้ครบถ้วน", { status: 400 });
@@ -33,22 +40,25 @@ export async function PATCH(
   });
 
   if (!admin)
-    return {
+    return NextResponse.json("เกิดข้อผิดพลาดในการอัพเดทบัญชีผู้ดูแลระบบ", {
       status: 500,
-      body: "เกิดข้อผิดพลาดในการอัพเดทบัญชีผู้ดูแลระบบ",
-    };
+    });
 
-  return {
-    status: 200,
-    body: {
-      message: "อัพเดทบัญชีผู้ดูแลระบบสำเร็จ",
-      status: "success",
-    },
-  };
+  return NextResponse.json({
+    message: "อัพเดทบัญชีผู้ดูแลระบบสำเร็จ",
+    status: "success",
+  });
 }
 
-export async function DELETE({ params }: { params: { id: string } }) {
+export async function DELETE(
+  req: Request,
+  res: NextResponse,
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
+  const session = await getServerSession(authOptions);
+
+  if (!session) return NextResponse.json("Unauthorized", { status: 401 });
   const data = await db.admin.findUnique({
     where: { id },
   });
@@ -61,16 +71,12 @@ export async function DELETE({ params }: { params: { id: string } }) {
   });
 
   if (!admin)
-    return {
+    return NextResponse.json("เกิดข้อผิดพลาดในการลบบัญชีผู้ดูแลระบบ", {
       status: 500,
-      body: "เกิดข้อผิดพลาดในการลบบัญชีผู้ดูแลระบบ",
-    };
+    });
 
-  return {
-    status: 200,
-    body: {
-      message: "ลบบัญชีผู้ดูแลระบบสำเร็จ",
-      status: "success",
-    },
-  };
+  return NextResponse.json({
+    message: "ลบบัญชีผู้ดูแลระบบสำเร็จ",
+    status: "success",
+  });
 }

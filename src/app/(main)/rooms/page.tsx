@@ -1,4 +1,3 @@
-import PromotionsCard from "@/components/card/promotions-card";
 import PageHeader from "@/components/pageheader/pageheader";
 import ContainerWrapper from "@/components/wrapper/container-wrapper";
 import PageWrapper from "@/components/wrapper/page-wrapper";
@@ -11,9 +10,10 @@ import {
   BiSquare,
   BiUser,
 } from "react-icons/bi";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { THB } from "@/lib/utils";
+import db from "@/configs/db";
 
 async function getRoomType() {
   const room = await db.roomType.findMany();

@@ -4,7 +4,10 @@ import { roomTypeSchema } from "@/types/room-type";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-export async function GET({ params }: { params: { id: string } }) {
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
   const room = await db.roomType.findUnique({
     where: { id },
@@ -12,7 +15,7 @@ export async function GET({ params }: { params: { id: string } }) {
 
   if (!room) return NextResponse.json("ไม่พบข้อมูลห้องพัก", { status: 404 });
 
-  return room;
+  return NextResponse.json(room);
 }
 
 export async function PATCH(
@@ -51,7 +54,10 @@ export async function PATCH(
   });
 }
 
-export async function DELETE({ params }: { params: { id: string } }) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   const sesstion = await getServerSession(authOptions);
   if (!sesstion) return NextResponse.json("Unauthorized", { status: 401 });
 

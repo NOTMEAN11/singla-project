@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
+  res: Response,
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
@@ -15,14 +16,12 @@ export async function GET(
 
   if (!data) return NextResponse.json("ไม่พบข้อมูลโปรโมชั่น", { status: 404 });
 
-  return {
-    status: 200,
-    body: data,
-  };
+  return NextResponse.json(data);
 }
 
 export async function PATCH(
   req: Request,
+  res: Response,
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
@@ -58,7 +57,11 @@ export async function PATCH(
   });
 }
 
-export async function DELETE({ params }: { params: { id: string } }) {
+export async function DELETE(
+  req: Request,
+  res: Response,
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
   const session = await getServerSession(authOptions);
 

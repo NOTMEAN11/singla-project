@@ -4,7 +4,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { roomSchema } from "@/types/rooms";
 
-export async function GET({ params }: { params: { id: string } }) {
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   const session = await getServerSession(authOptions);
   const { id } = params;
   if (!session) return NextResponse.json("Unauthorized", { status: 401 });
@@ -54,7 +57,10 @@ export async function PATCH(
   });
 }
 
-export async function DELETE({ params }: { params: { id: string } }) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   const session = await getServerSession(authOptions);
 
   if (!session) return NextResponse.json("Unauthorized", { status: 401 });

@@ -1,12 +1,70 @@
 import db from "@/configs/db";
 import { authOptions } from "@/lib/auth";
 import { roomTypeSchema } from "@/types/room-type";
+import { format } from "date-fns";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
-  const rooms = await db.roomType.findMany();
-  return NextResponse.json(rooms);
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const includeRoom = searchParams.get("room") === "true" ? true : false;
+  const checkIn = searchParams.get("checkIn");
+  const checkOut = searchParams.get("checkOut");
+  const checkInDate = new Date(Number(checkIn!));
+  const checkOutDate = new Date(Number(checkOut!));
+
+  const type = searchParams.get("type");
+
+  if (!checkIn || !checkOut) {
+    const rooms = await db.roomType.findMany();
+    return NextResponse.json(rooms);
+  }
+
+  const roomType = await db.roomType.findUnique({
+    where: { id: type! },
+  });
+
+  if (!roomType)
+    return NextResponse.json(
+      { message: "ไม่พบประเภทห้องพัก", status: "not-found" },
+      { status: 404 }
+    );
+
+  const checkAvailableRoom = await db.room.findMany({
+    where: {
+      roomTypeId: roomType.id, // Filter by correct room type
+      AND: [
+        {
+          bookings: {
+            none: {
+              OR: [
+                {
+                  checkIn: {
+                    lte: checkOutDate,
+                  },
+                  checkOut: {
+                    gte: checkInDate,
+                  },
+                },
+                {
+                  AND: [
+                    { checkIn: { gt: checkOutDate } },
+                    { checkOut: { lt: checkInDate } },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+        { status: "available" },
+      ],
+    },
+    include: {
+      roomType: true,
+    },
+  });
+
+  return NextResponse.json(checkAvailableRoom);
 }
 
 export async function POST(req: Request) {

@@ -72,7 +72,10 @@ export async function PATCH(
   });
 }
 
-export async function DELETE({ params }: { params: { id: string } }) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
   const session = await getServerSession(authOptions);
 
