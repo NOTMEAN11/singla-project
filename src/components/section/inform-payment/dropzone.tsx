@@ -2,7 +2,7 @@
 import { Button, buttonVariants } from "@/components/ui/button";
 import { X, XIcon } from "lucide-react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
@@ -12,6 +12,7 @@ type Props = {
   bookingId: string;
 };
 function Dropzone({ amount, bookingId }: Props) {
+  const router = useRouter();
   const [files, setFiles] = useState<any[]>([]);
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles((prev) => [
@@ -31,7 +32,7 @@ function Dropzone({ amount, bookingId }: Props) {
 
   async function handleUpload(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    toast.loading("กำลังอัพโหลดไฟล์");
+
     const formData = new FormData();
     formData.set("file", files[0]);
 
@@ -54,6 +55,9 @@ function Dropzone({ amount, bookingId }: Props) {
       setFiles([]);
       return toast.error(data.message);
     }
+
+    toast.success(data.message);
+    return router.push("/payment/search-booking?bookingId=" + bookingId);
   }
 
   function handleDelete(name: string) {

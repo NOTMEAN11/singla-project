@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { BedSingle, Users } from "lucide-react";
+import { BedSingle, InfoIcon, Users, Utensils } from "lucide-react";
 import { toast } from "sonner";
 
 import useBookingStore from "@/hooks/usebooking";
@@ -15,10 +15,41 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 import { RoomType } from "@/types/room-type";
+import { format } from "date-fns";
+import { th } from "date-fns/locale/th";
+import { THB } from "@/lib/utils";
+import {
+  BiShower,
+  BiSolidTShirt,
+  BiSolidTree,
+  BiSquare,
+  BiUser,
+} from "react-icons/bi";
+import HoverIcon from "@/components/hover-icon";
 
 type Props = {
   roomtype: RoomType[];
+};
+
+type RoomResponse = {
+  id: string;
+  name: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  roomTypeId: string;
+  roomType: RoomType;
 };
 
 function BookingSection({ roomtype }: Props) {
@@ -26,6 +57,7 @@ function BookingSection({ roomtype }: Props) {
     useBookingStore();
 
   const router = useRouter();
+  const [rooms, setRooms] = useState<RoomResponse[]>([] as RoomResponse[]);
 
   async function handleSubmit() {
     if (!room) {
@@ -150,6 +182,33 @@ function BookingSection({ roomtype }: Props) {
     </Popover>
   );
 
+  useEffect(() => {
+    async function fetchRooms(
+      room: string,
+      checkInDate: number,
+      checkOutDate: number
+    ) {
+      const res = await fetch(
+        `/api/roomtypes?type=${room}&checkIn=${checkInDate}&checkOut=${checkOutDate}`
+      );
+
+      if (!res.ok) {
+        setRooms([]);
+        return;
+      }
+
+      const data = await res.json();
+
+      if (data.status === "not-found") {
+        setRooms([]);
+        return;
+      }
+      setRooms(data);
+    }
+    fetchRooms(room!, checkInDate?.getTime()!, checkOutDate?.getTime()!);
+  }, [room, checkInDate, checkOutDate]);
+
+  console.log(rooms);
   return (
     <>
       <div className="grid w-full grid-cols-1 p-2 space-y-2 border lg:hidden">
@@ -191,6 +250,96 @@ function BookingSection({ roomtype }: Props) {
           </Button>
         </div>
       </div>
+      {room !== "" && (
+        <div className="w-full p-4 my-4 border">
+          {rooms.length === 0 ? (
+            <p className="flex items-center justify-center h-32">
+              ขออภัย ไม่พบห้องพักที่ว่างในช่วงเวลาดังกล่าว
+            </p>
+          ) : (
+            <Table>
+              <TableCaption>รายการห้องพัก</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-32">หมายเลขห้องพัก</TableHead>
+                  <TableHead>สถานะ</TableHead>
+                  <TableHead>ราคา</TableHead>
+                  <TableHead>จำนวนผู้เข้าพัก</TableHead>
+                  <TableHead>สิ่งอำนวยความสะดวก</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {rooms?.map((room) => (
+                  <TableRow key={room.id}>
+                    <TableCell className="font-medium">{room.name}</TableCell>
+                    <TableCell>
+                      {room.status === "available" && "ว่าง"}
+                    </TableCell>
+                    <TableCell>{THB(room.roomType.price)} / คืน</TableCell>
+                    <TableCell>{room.roomType.capacity} คน</TableCell>
+                    <TableCell>
+                      <ul className="grid grid-cols-1 text-sm">
+                        <li className="flex items-center space-x-1">
+                          <BiSquare />{" "}
+                          <span>
+                            ขนาดห้อง :{26 * room.roomType.capacity} ตร.ม
+                          </span>
+                        </li>
+
+                        <li className="flex items-center space-x-1">
+                          <BiShower /> <span>ผักบัวและอ่างอาบน้ำ</span>
+                        </li>
+                        <li className="flex items-center space-x-1">
+                          <BiSolidTShirt /> <span>ชุดคลุมอาบน้ำ</span>
+                        </li>
+                        <li className="flex items-center space-x-1">
+                          <Utensils size={14} />{" "}
+                          <span className="flex items-center space-x-1">
+                            บุฟเฟ่ต์เช้า (ไม่บังคับ)
+                            <HoverIcon
+                              icon={<InfoIcon size={14} className="ml-1" />}
+                              content={
+                                <div>
+                                  <p>
+                                    บุฟเฟ่ต์เช้าของทางรีสอร์ทมีบริการให้เลือกหลากหลายเมนู
+                                    สำหรับลูกค้าที่ต้องการใช้บริการ
+                                    โปรดแจ้งล่วงหน้าเพื่อให้ทางรีสอร์ทได้จัดเตรียมให้
+                                    หรือสามารถเลือกได้ที่เคาน์เตอร์
+                                    โดยจะมีค่าบริการเพิ่มเติม 199 บาทต่อท่าน
+                                    หรือ 99 บาทสำหรับเด็ก
+                                  </p>
+                                </div>
+                              }
+                            />
+                          </span>
+                        </li>
+                        <li className="flex items-center space-x-1">
+                          <Utensils size={14} />{" "}
+                          <span className="flex items-center space-x-1">
+                            รถรับ-ส่งสนามบิน (ไม่บังคับ){" "}
+                            <HoverIcon
+                              icon={<InfoIcon size={14} className="ml-1" />}
+                              content={
+                                <div>
+                                  <p>
+                                    มีบริการรถรับ-ส่งสนามบินสนามบินภูเก็ต
+                                    โดยจะมีค่าบริการเพิ่มเติม 300 บาทต่อท่าน
+                                    สำหรับเด็ก 150 บาทต่อท่าน
+                                  </p>
+                                </div>
+                              }
+                            />
+                          </span>
+                        </li>
+                      </ul>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </div>
+      )}
     </>
   );
 }
