@@ -17,11 +17,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { RoomType } from "@/types/booking";
 
 type Props = {
   placeholder?: string;
-  data: RoomType[];
+  data: any[];
   icon?: React.ReactNode;
   className?: string;
   fn?: (value: string) => void;
@@ -33,8 +32,10 @@ export function Combobox({ placeholder, data, className, icon, fn }: Props) {
 
   useEffect(() => {
     fn && fn(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
+  console.log(value);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -45,16 +46,16 @@ export function Combobox({ placeholder, data, className, icon, fn }: Props) {
           className={cn("w-full max-w-56 justify-between text-xs", className)}
         >
           {value
-            ? data.find((i) => i.id === value)?.name
+            ? data.find((i) => i.id || i.name === value)?.name
             : (
                 <span className="flex items-center ">
                   {icon} <p>{placeholder}</p>
                 </span>
               ) || "โปรดเลือก"}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full max-w-56 p-0">
+      <PopoverContent className="w-full p-0 max-w-56">
         <Command>
           <CommandInput placeholder={placeholder || "โปรดเลือก"} />
           <CommandEmpty>ไม่พบข้อมูล</CommandEmpty>
@@ -64,6 +65,7 @@ export function Combobox({ placeholder, data, className, icon, fn }: Props) {
                 key={i.id}
                 value={i.id}
                 onSelect={(currentValue) => {
+                  console.log("currentValue => ", currentValue);
                   setValue(currentValue === value ? "" : currentValue);
                   setOpen(false);
                 }}
