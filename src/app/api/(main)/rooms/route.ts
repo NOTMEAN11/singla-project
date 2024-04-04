@@ -1,15 +1,26 @@
 import db from "@/configs/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { roomSchema } from "@/types/rooms";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
+
+  const searchParams = req.nextUrl.searchParams;
+  const includeName = searchParams.get("includeName") === "true" ? true : false;
 
   if (!session) return NextResponse.json("Unauthorized", { status: 401 });
 
-  const rooms = await db.room.findMany();
+  const rooms = await db.room.findMany({
+    include: {
+      roomType: {
+        select: {
+          name: includeName,
+        },
+      },
+    },
+  });
   return NextResponse.json(rooms);
 }
 
