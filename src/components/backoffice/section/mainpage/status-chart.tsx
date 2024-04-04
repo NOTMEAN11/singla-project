@@ -37,7 +37,28 @@ function StatusChart({ data }: Props) {
                   <Cell key={`cell-${index}`} fill={COLORS[index]} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="p-2 border rounded-lg shadow-sm bg-background">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="flex flex-col">
+                            <span className="text-[0.70rem] uppercase text-muted-foreground">
+                              จำนวนห้องที่{payload[0].payload.name}
+                            </span>
+                            <span className="font-bold text-muted-foreground">
+                              {payload[0].value} ห้อง
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  return null;
+                }}
+              />
             </PieChart>
           </ResponsiveContainer>
 
