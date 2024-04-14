@@ -16,7 +16,14 @@ export async function GET(request: NextRequest) {
   const type = searchParams.get("type");
 
   if (!checkIn || !checkOut) {
-    const rooms = await db.roomType.findMany();
+    const rooms = await db.roomType.findMany({
+      include: {
+        rooms: includeRoom,
+      },
+      orderBy: {
+        price: "asc",
+      },
+    });
     return NextResponse.json(rooms);
   }
 

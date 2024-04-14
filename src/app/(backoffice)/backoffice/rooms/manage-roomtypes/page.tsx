@@ -9,15 +9,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 import db from "@/configs/db";
-import {
-  RoomsTable,
-  RoomsTypeTable,
-} from "@/components/backoffice/datatable/rooms";
+import RoomsTypeTable from "@/components/backoffice/datatable/roomtype";
+import CreateRoomTypeDialog from "@/components/backoffice/dialog/roomtype/create";
 
 async function RoomsPage() {
   const session = await getServerSession(authOptions);
   if (!session) {
-    return redirect("/backoffice");
+    return redirect("/backoffice/signin");
   }
 
   return (
@@ -31,18 +29,7 @@ async function RoomsPage() {
           },
         ]}
         title="จัดการประเภทห้องพัก"
-        extra={
-          <div className="flex items-center space-x-2">
-            <Link
-              href="/rooms/create-room"
-              className={buttonVariants({
-                className: "flex items-center justify-center space-x-2",
-              })}
-            >
-              <Plus size={14} /> <div>เพิ่มประเภทห้องพัก</div>
-            </Link>
-          </div>
-        }
+        extra={<CreateRoomTypeDialog />}
       />
 
       <Card className="my-2 rounded-md">

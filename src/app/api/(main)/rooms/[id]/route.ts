@@ -14,6 +14,9 @@ export async function GET(
 
   const room = await db.room.findUnique({
     where: { id },
+    include: {
+      roomType: true,
+    },
   });
   if (!room) return NextResponse.json("ไม่พบข้อมูลห้องพัก", { status: 404 });
 
@@ -41,7 +44,7 @@ export async function PATCH(
       name: result.data.name,
       status: result.data.status,
       roomType: {
-        connect: { id: result.data.roomTypeId },
+        connect: { id: result.data.roomTypeId! },
       },
     },
   });

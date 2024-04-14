@@ -49,7 +49,7 @@ export async function PATCH(
     });
 
   return NextResponse.json({
-    message: "สร้างห้องพักสำเร็จ",
+    message: "แก้ไขห้องพักสำเร็จ",
     status: "success",
   });
 }
