@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const schema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   name: z.string(),
   status: z.string(),
   roomTypeId: z.string().optional(),
