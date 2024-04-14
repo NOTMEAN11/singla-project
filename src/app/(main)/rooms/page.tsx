@@ -16,7 +16,11 @@ import { THB } from "@/lib/utils";
 import db from "@/configs/db";
 
 async function getRoomType() {
-  const room = await db.roomType.findMany();
+  const room = await db.roomType.findMany({
+    orderBy: {
+      price: "asc",
+    },
+  });
   return room;
 }
 
