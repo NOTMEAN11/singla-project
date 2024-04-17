@@ -46,7 +46,7 @@ export function Combobox({ placeholder, data, className, icon, fn }: Props) {
           className={cn("w-full max-w-56 justify-between text-xs", className)}
         >
           {value
-            ? data.find((i) => i.id || i.name === value)?.name
+            ? data.find((i) => i.id === value)?.name
             : (
                 <span className="flex items-center ">
                   {icon} <p>{placeholder}</p>

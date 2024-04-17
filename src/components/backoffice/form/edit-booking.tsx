@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React, { use, useEffect, useState } from "react";
 import { z } from "zod";
@@ -143,8 +144,11 @@ function EditBooking({ booking }: Props) {
     currentRoom?.roomType.price ||
     0;
 
-  const totalPrice =
-    (roomPrice + buffetPrice + pickupPrice - discountPrice + feePrice) * 1.07;
+  const vat = 0.07;
+  const calprice = roomPrice + buffetPrice + pickupPrice + Number(feePrice);
+  const totalPrice = calprice < 0 ? 0 : calprice * (1 + vat) - discountPrice;
+
+  console.log(totalPrice);
 
   const checkInDate = new Date(checkIn).setHours(0, 0, 0, 0);
   const checkOutDate = new Date(checkOut).setHours(24, 0, 0, 0);

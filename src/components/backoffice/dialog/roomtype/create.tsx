@@ -62,7 +62,7 @@ function CreateRoomTypeDialog() {
       slug: "",
     },
   });
-  const [assets, setAssets] = useState<{ src: string; alt: string }[]>([]);
+  const [assets, setAssets] = useState<{ name: string; path: string }[]>([]);
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof schema>) {
@@ -87,9 +87,9 @@ function CreateRoomTypeDialog() {
   }
 
   useEffect(() => {
-    fetch("/api/assets?dir=rooms")
+    fetch("/api/assets/rooms")
       .then((res) => res.json())
-      .then((data) => setAssets(data));
+      .then((data) => setAssets(data.files));
   }, []);
 
   return (
@@ -244,10 +244,10 @@ function CreateRoomTypeDialog() {
                             {assets.map((img, idx) => (
                               <SelectItem
                                 key={idx}
-                                value={img.src}
+                                value={img.path}
                                 // className="flex items-center justify-center"
                               >
-                                {img.alt}
+                                {img.name}
                               </SelectItem>
                             ))}
                           </SelectContent>

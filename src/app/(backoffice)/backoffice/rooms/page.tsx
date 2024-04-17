@@ -9,7 +9,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
-import { RoomsTable } from "@/components/backoffice/datatable/rooms";
+import RoomsTable from "@/components/backoffice/datatable/rooms";
 import Image from "next/image";
 
 async function RoomsPage() {

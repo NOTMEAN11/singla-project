@@ -27,7 +27,7 @@ async function getData(page: number, limit: number, status: string) {
       status: status,
     },
     orderBy: {
-      id: "desc",
+      name: "asc",
     },
   });
 
@@ -41,7 +41,7 @@ async function getAllData(page: number, limit: number) {
     take: limit,
     skip: (page - 1) * limit,
     orderBy: {
-      id: "desc",
+      name: "asc",
     },
   });
 

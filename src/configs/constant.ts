@@ -1,6 +1,6 @@
 const menu = [
   { name: "โปรโมชั่น", Link: "/promotions" },
-  { name: "ติดต่อเรา", Link: "/contact-us" },
+  { name: "ชำระเงิน", Link: "/payment" },
 ];
 
 const room = [

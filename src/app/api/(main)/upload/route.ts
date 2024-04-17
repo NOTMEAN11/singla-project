@@ -9,7 +9,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 async function slipsUpload(file: File, booking: Booking) {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
-  const path = `./public/slips/${booking.id + " - " + file.name}`;
+  const path = `./public/assets/slips/${booking.id + " - " + file.name}`;
 
   await writeFile(path, buffer);
 }

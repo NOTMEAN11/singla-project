@@ -58,10 +58,11 @@ function HomeSection({ roomType, faqs }: HomeSectionProps) {
         viewport={{ once: true }}
       >
         <Image
-          src="/assets/placeholders/1400x200.svg"
+          src="/assets/bgs/banner.jpg"
           alt="400"
           width={1400}
           height={200}
+          className="object-cover w-full h-[200px]"
         />
       </motion.div>
       <div className="mt-24 mb-20 ">

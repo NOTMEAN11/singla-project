@@ -67,7 +67,7 @@ function EditRoomTypeDialog({ data, id }: Props) {
       ...data,
     },
   });
-  const [assets, setAssets] = useState<{ src: string; alt: string }[]>([]);
+  const [assets, setAssets] = useState<{ name: string; path: string }[]>([]);
   const [images, setImages] = useState<string[]>(data.image);
 
   // 2. Define a submit handler.
@@ -93,9 +93,9 @@ function EditRoomTypeDialog({ data, id }: Props) {
   }
 
   useEffect(() => {
-    fetch("/api/assets?dir=rooms")
+    fetch("/api/assets/rooms")
       .then((res) => res.json())
-      .then((data) => setAssets(data));
+      .then((data) => setAssets(data.files));
   }, []);
 
   return (
@@ -197,7 +197,7 @@ function EditRoomTypeDialog({ data, id }: Props) {
               control={form.control}
               name="image"
               render={({ field }) => {
-                const imgs = assets.filter((img) => !images.includes(img.src));
+                const imgs = assets.filter((img) => !images.includes(img.name));
                 const value = field.value;
                 return (
                   <FormItem>
@@ -253,10 +253,10 @@ function EditRoomTypeDialog({ data, id }: Props) {
                             {imgs.map((img, idx) => (
                               <SelectItem
                                 key={idx}
-                                value={img.src}
+                                value={img.path}
                                 // className="flex items-center justify-center"
                               >
-                                {img.alt}
+                                {img.name}
                               </SelectItem>
                             ))}
                           </SelectContent>

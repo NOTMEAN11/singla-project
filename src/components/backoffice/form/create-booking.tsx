@@ -139,7 +139,6 @@ function CreateBooking() {
   const buffetPrice = isBuffet ? adults * 199 + children * 99 : 0;
   const pickupPrice = isPickup ? adults * 300 + children * 150 : 0;
 
-  console.log(feePrice);
   const roomPrice =
     room.find((item) => item.id === roomId)?.roomType.price! || 0;
 
@@ -176,6 +175,7 @@ function CreateBooking() {
     )
       .then((res) => res.json())
       .then((data) => setRoom(data));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
