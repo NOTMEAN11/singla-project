@@ -24,7 +24,11 @@ import ConfirmSummary from "@/components/section/booking/confirm/summary";
 import ConfirmUserDetail from "@/components/section/booking/confirm/user-detail";
 
 async function getData() {
-  const roomtype = await db.roomType.findMany();
+  const roomtype = await db.roomType.findMany({
+    orderBy: {
+      name: "desc",
+    },
+  });
   const coupons = await db.coupon.findMany();
   return { roomtype, coupons };
 }
