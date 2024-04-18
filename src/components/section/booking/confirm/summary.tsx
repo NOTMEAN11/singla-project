@@ -48,6 +48,8 @@ function ConfirmSummary({ coupons, roomtype }: Props) {
 
   function getTotalPrice() {
     let price = ROOM_TYPE?.price! * daysDifference + fee;
+    const isCouponOut =
+      coupons.find((item) => item.code === coupon)?.total === 0;
 
     if (options?.buffet) {
       price += 199 * guest!.adults;
@@ -61,7 +63,7 @@ function ConfirmSummary({ coupons, roomtype }: Props) {
       price += shuttle;
     }
 
-    if (coupon) {
+    if (coupon && !isCouponOut) {
       price -= coupons.find((item) => item.code === coupon)?.discount! || 0;
     }
 
@@ -73,6 +75,7 @@ function ConfirmSummary({ coupons, roomtype }: Props) {
   console.log(ROOM_TYPE?.price);
 
   const discount = coupons.find((item) => item.code === coupon)?.discount! || 0;
+  const id = coupons.find((item) => item.code === coupon)?.id;
 
   const totalPrice = THB(getTotalPrice().price);
   const feePrice = THB(fee);
@@ -81,6 +84,21 @@ function ConfirmSummary({ coupons, roomtype }: Props) {
 
   async function handleSubmit() {
     toast.loading("กำลังทำการจองห้องพัก");
+    try {
+      const res = await fetch(`/api/promotions/coupon/${id}`, {
+        method: "PATCH",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        return toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      return toast.error("มีบางอย่างผิดพลาด โปรดลองใหม่อีกครั้ง");
+    }
+
     try {
       const res = await fetch("/api/booking", {
         method: "POST",
