@@ -6,8 +6,6 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import React from "react";
-import db from "@/configs/db";
-import Editor from "@/components/backoffice/editor";
 import {
   Card,
   CardContent,
