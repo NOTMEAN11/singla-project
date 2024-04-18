@@ -4,7 +4,7 @@ import { writeFile } from "fs/promises";
 
 export async function GET(req: NextRequest) {
   //find all directories in the assets folder
-  const path = __dirname + "../../../../../../../public/assets/";
+  const path = process.cwd() + "/public/assets/";
   const dirs = fs.readdirSync(path);
   const directories = dirs
     .filter((dir) => fs.lstatSync(path + dir).isDirectory())
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       const file: File | null = data.get("file") as unknown as File;
       const formData = new FormData();
       formData.set("files", file);
-      const path = __dirname + "../../../../../../../public/assets/";
+      const path = process.cwd() + "/public/assets/";
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
       }
-      const path = __dirname + "../../../../../../../public/assets/" + name;
+      const path = process.cwd() + "/public/assets/" + name;
       fs.mkdirSync(path);
       return NextResponse.json({
         message: "โฟล์เดอร์ถูกสร้างแล้ว",
@@ -102,7 +102,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     try {
-      fs.unlinkSync(__dirname + "../../../../../../../public/assets/" + name);
+      fs.unlinkSync(process.cwd() + "/public/assets/" + name);
       return NextResponse.json({
         message: "ไฟล์ถูกลบแล้ว",
         status: "success",
@@ -127,7 +127,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     try {
-      fs.rmdirSync(__dirname + "../../../../../../../public/assets/" + name, {
+      fs.rmdirSync(process.cwd() + "/public/assets/" + name, {
         recursive: true,
       });
       return NextResponse.json({

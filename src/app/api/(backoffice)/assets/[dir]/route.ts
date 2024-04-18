@@ -8,8 +8,7 @@ export async function GET(
 ) {
   // find all images in the directory
   try {
-    const path =
-      __dirname + "../../../../../../../../public/assets/" + params.dir + "/";
+    const path = process.cwd() + "/public/assets/" + params.dir;
     const file = fs.readdirSync(path);
     const files = file.map((file) => ({
       name: file,
@@ -42,9 +41,7 @@ export async function POST(
     });
   }
 
-  const findDir = fs.readdirSync(
-    __dirname + "../../../../../../../../public/assets/"
-  );
+  const findDir = fs.readdirSync(process.cwd() + "/public/assets");
   const dir = findDir.find((dir) => dir === params.dir);
   if (!dir) {
     return NextResponse.json({
@@ -53,8 +50,7 @@ export async function POST(
     });
   }
 
-  const path =
-    __dirname + "../../../../../../../../public/assets/" + params.dir + "/";
+  const path = process.cwd() + "/public/assets/" + params.dir + "/" + file.name;
 
   try {
     const bytes = await file.arrayBuffer();
