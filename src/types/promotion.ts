@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const schema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   name: z.string(),
   image: z.string(),
   description: z.string(),
@@ -10,7 +10,7 @@ const schema = z.object({
 });
 
 const couponSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   code: z.string(),
   discount: z.number(),
   description: z.string(),
