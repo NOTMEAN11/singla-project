@@ -19,7 +19,6 @@ import {
 import Link from "next/link";
 import React, { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
-import { ModeToggle } from "../../toggle-theme";
 import { usePathname } from "next/navigation";
 
 const variants: Variants = {
@@ -139,7 +138,6 @@ function SideBar() {
           >
             <LogOut size={14} /> <h4 className="ml-2">ออกจากระบบ</h4>
           </div>
-          <ModeToggle />
         </motion.div>
       ) : (
         <div className="h-full ">

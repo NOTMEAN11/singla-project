@@ -37,4 +37,9 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: "/backoffice/signin",
+    signOut: "/backoffice/signout",
+    error: "/backoffice/error",
+  },
 };

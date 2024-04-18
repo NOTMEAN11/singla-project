@@ -38,10 +38,10 @@ import { th } from "date-fns/locale/th";
 
 const schema = z.object({
   code: z.string(),
-  discount: z.number(),
+  discount: z.coerce.number(),
   description: z.string(),
-  total: z.number(),
-  endDate: z.date(),
+  total: z.coerce.number(),
+  endDate: z.date().optional(),
 });
 
 function CreateCouponDialog() {
@@ -57,7 +57,7 @@ function CreateCouponDialog() {
   });
 
   async function onSubmit(values: z.infer<typeof schema>) {
-    const res = await fetch(`/api/promotion/coupon`, {
+    const res = await fetch(`/api/promotions/coupon`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

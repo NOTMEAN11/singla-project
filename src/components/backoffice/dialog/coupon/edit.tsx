@@ -35,13 +35,14 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { th } from "date-fns/locale/th";
+import { toast } from "sonner";
 
 const schema = z.object({
   code: z.string(),
-  discount: z.number(),
+  discount: z.coerce.number(),
   description: z.string(),
-  total: z.number(),
-  endDate: z.date(),
+  total: z.coerce.number(),
+  endDate: z.date().optional(),
 });
 
 type Props = {
@@ -59,10 +60,25 @@ function EditCouponDialog({ data, id }: Props) {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof schema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof schema>) {
+    const res = await fetch(`/api/promotions/coupon/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...values,
+        endDate: new Date(values.endDate!),
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return toast.error(data.message);
+    }
+
+    return toast.success(data.message);
   }
   return (
     <Dialog>
@@ -100,6 +116,37 @@ function EditCouponDialog({ data, id }: Props) {
                   <FormLabel>คำอธิบาย</FormLabel>
                   <FormControl>
                     <Input placeholder="คำอธิบาย" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="discount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ส่วนลด</FormLabel>
+                  <FormControl>
+                    <Input placeholder="ส่วนลด" {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="total"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>จำนวนคงเหลือ</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="จำนวนคงเหลือ"
+                      {...field}
+                      type="number"
+                    />
                   </FormControl>
 
                   <FormMessage />
