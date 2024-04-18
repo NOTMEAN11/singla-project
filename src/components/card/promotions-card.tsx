@@ -2,16 +2,17 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 type Prop = {
-  title: string;
-  content: string;
+  name: string;
+  description: string;
   image: string;
   slug: string;
+  content: string;
 };
 
-function PromotionsCard({ content, slug, title, image }: Prop) {
+function PromotionsCard({ description, slug, name, image }: Prop) {
   return (
     <Link href={"/promotions/" + slug} className="relative">
-      <p className="absolute text-white font-bold text-md p-2 z-50 ">{title}</p>
+      <p className="absolute z-50 p-2 font-bold text-white text-md ">{name}</p>
       <Image
         className="brightness-50 hover:"
         src={image}
@@ -19,8 +20,8 @@ function PromotionsCard({ content, slug, title, image }: Prop) {
         width={400}
         height={200}
       />
-      <p className="absolute bottom-1 text-white font-bold text-sm p-2">
-        {content}
+      <p className="absolute p-2 text-sm font-bold text-white bottom-1">
+        {description}
       </p>
     </Link>
   );
