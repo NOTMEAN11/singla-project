@@ -21,7 +21,6 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  res: Response,
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
@@ -59,7 +58,6 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  res: Response,
   { params }: { params: { id: string } }
 ) {
   const { id } = params;

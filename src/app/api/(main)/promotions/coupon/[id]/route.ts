@@ -23,12 +23,11 @@ export async function PATCH(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = params;
   const session = await getServerSession(authOptions);
 
   if (!session) {
     const coupon = await db.coupon.findUnique({
-      where: { id },
+      where: { id: params.id },
     });
 
     if (!coupon) return NextResponse.json("ไม่พบข้อมูลคูปอง", { status: 404 });
@@ -36,11 +35,14 @@ export async function PATCH(
     const totalCoupon = coupon.total === 0 ? 0 : coupon.total - 1;
 
     const update = await db.coupon.update({
-      where: { id },
+      where: { id: params.id },
       data: {
         total: totalCoupon,
       },
     });
+
+    if (!update)
+      return NextResponse.json("เกิดข้อผิดพลาดในการใช้คูปอง", { status: 500 });
 
     return NextResponse.json({
       message: "ใช้คูปองสำเร็จ",
@@ -55,7 +57,7 @@ export async function PATCH(
     return NextResponse.json("กรอกข้อมูลให้ครบถ้วน", { status: 400 });
 
   const coupon = await db.coupon.update({
-    where: { id },
+    where: { id: params.id },
     data: {
       ...result.data,
     },
