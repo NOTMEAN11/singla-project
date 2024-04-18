@@ -126,6 +126,59 @@ async function main() {
       },
     ],
   });
+
+  const promotion = await prisma.promotion.createMany({
+    data: [
+      {
+        name: "นาทีสุดท้าย",
+        description:
+          "ราคาดีที่สุดสำหรับการพักผ่อนที่มหาครเมืองสงขลา ที่พักในฝันสำหรับวันหยุดในเมือง",
+        image: "/assets/imgpromotions/promotions1.jpg",
+        slug: "last-minute",
+        content: "",
+      },
+      {
+        name: "แพ็กเกจ",
+        description:
+          "คลื่นแห่งการเฉลิมฉลอง: การเดินทางที่เต็มอิ่ม พบประสบการณ์สุดพิเศษกับแพ็คเกจซิกเนเจอร์ ในโอกาสครบรอบ",
+        image: "/assets/imgpromotions/promotions2.jpg",
+        slug: "package",
+        content: "",
+      },
+
+      {
+        name: "ห้องพักและอาหารเช้า",
+        description: "SINGLA ช่วงเวลาดีดีแห่งความสุขตรงนี้ของคุณ",
+        image: "/assets/imgpromotions/promotions3.jpg",
+        slug: "room-breakfast",
+        content: "",
+      },
+      {
+        name: "ยิ่งพักนาน ยิ่งคุ้ม",
+        description:
+          "ยิ่งพักนาน ยิ่งคุ้ม พลาดไม่ได้กับข้อเสนอยิ่งพักนาน ยิ่งคุ้ม",
+        image: "/assets/imgpromotions/promotions4.jpg",
+        slug: "longer-stay",
+        content: "",
+      },
+      {
+        name: "ข้อเสนอห้องพัก",
+        description:
+          "พักก่อน จ่ายทีหลัง ผ่อนชำระแบบไม่มีดอกเบี้ย สำหรับผู้ถือบัตรที่ร่วมรายการ",
+        image: "/assets/imgpromotions/promotions5.jpg",
+        slug: "room-offers",
+        content: "",
+      },
+      {
+        name: "ดินเนอร์สุดโรแมนติก​",
+        description:
+          "เฉลิมฉลองความโรแมนติกในขณะที่ค้นพบอาหารค่ำสุดโรแมนติกกับคนสำคัญของคุณ",
+        image: "/assets/imgpromotions/promotions6.jpg",
+        slug: "romantic-dinner",
+        content: "",
+      },
+    ],
+  });
 }
 
 main()
