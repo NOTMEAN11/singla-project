@@ -1,5 +1,5 @@
 import db from "@/configs/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { couponSchema } from "@/types/promotion";
@@ -20,10 +20,12 @@ export async function GET(
 }
 
 export async function PATCH(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const session = await getServerSession(authOptions);
+  const searchParams = req.nextUrl.searchParams;
+  const type = searchParams.get("type") || "use";
 
   if (session) {
     const body = await req.json();
@@ -50,28 +52,30 @@ export async function PATCH(
     });
   }
 
-  const coupon = await db.coupon.findUnique({
-    where: { id: params.id },
-  });
+  if (type === "use") {
+    const coupon = await db.coupon.findUnique({
+      where: { id: params.id },
+    });
 
-  if (!coupon) return NextResponse.json("ไม่พบข้อมูลคูปอง", { status: 404 });
+    if (!coupon) return NextResponse.json("ไม่พบข้อมูลคูปอง", { status: 404 });
 
-  const totalCoupon = coupon.total === 0 ? 0 : coupon.total - 1;
+    const totalCoupon = coupon.total === 0 ? 0 : coupon.total - 1;
 
-  const update = await db.coupon.update({
-    where: { id: params.id },
-    data: {
-      total: totalCoupon,
-    },
-  });
+    const update = await db.coupon.update({
+      where: { id: params.id },
+      data: {
+        total: totalCoupon,
+      },
+    });
 
-  if (!update)
-    return NextResponse.json("เกิดข้อผิดพลาดในการใช้คูปอง", { status: 500 });
+    if (!update)
+      return NextResponse.json("เกิดข้อผิดพลาดในการใช้คูปอง", { status: 500 });
 
-  return NextResponse.json({
-    message: "ใช้คูปองสำเร็จ",
-    status: "success",
-  });
+    return NextResponse.json({
+      message: "ใช้คูปองสำเร็จ",
+      status: "success",
+    });
+  }
 }
 
 export async function DELETE(
