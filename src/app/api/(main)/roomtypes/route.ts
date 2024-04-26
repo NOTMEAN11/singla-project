@@ -47,16 +47,16 @@ export async function GET(request: NextRequest) {
               OR: [
                 {
                   checkIn: {
-                    lte: checkOutDate,
+                    lt: checkOutDate,
                   },
                   checkOut: {
-                    gte: checkInDate,
+                    gt: checkInDate,
                   },
                 },
                 {
                   AND: [
-                    { checkIn: { gt: checkOutDate } },
-                    { checkOut: { lt: checkInDate } },
+                    { checkIn: { gt: checkInDate } },
+                    { checkOut: { lt: checkOutDate } },
                   ],
                 },
               ],

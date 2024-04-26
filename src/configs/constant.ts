@@ -1,5 +1,5 @@
 const menu = [
-  { name: "โปรโมชั่น", Link: "/promotions" },
+  // { name: "โปรโมชั่น", Link: "/promotions" },
   { name: "ชำระเงิน", Link: "/payment" },
 ];
 

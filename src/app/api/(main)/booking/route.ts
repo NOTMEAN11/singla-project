@@ -64,10 +64,10 @@ export async function POST(req: Request) {
               OR: [
                 {
                   checkIn: {
-                    lte: result.data.checkOut,
+                    lt: result.data.checkOut,
                   },
                   checkOut: {
-                    gte: result.data.checkIn,
+                    gt: result.data.checkIn,
                   },
                 },
                 {

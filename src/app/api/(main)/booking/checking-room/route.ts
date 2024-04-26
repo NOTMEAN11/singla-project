@@ -39,10 +39,10 @@ export async function POST(req: Request) {
               OR: [
                 {
                   checkIn: {
-                    lte: result.data.checkOutDate,
+                    lt: result.data.checkOutDate,
                   },
                   checkOut: {
-                    gte: result.data.checkInDate,
+                    gt: result.data.checkInDate,
                   },
                 },
                 {

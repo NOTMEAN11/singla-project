@@ -1,7 +1,13 @@
 import PageHeader from "@/components/backoffice/pageheader/pageheader";
 import PageWrapper from "@/components/backoffice/wrapper/page-wrapper";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { authOptions } from "@/lib/auth";
 import {
   BedDouble,
@@ -69,11 +75,28 @@ async function GetData() {
     },
   });
 
+  const roomtype = await db.roomType.findMany({});
+
+  const monthlyStatsRoomtype = await db.booking.findMany({
+    where: {
+      OR: [{ status: "paid" }, { status: "checkin" }, { status: "checkout" }],
+    },
+    include: {
+      room: {
+        select: {
+          roomTypeId: true,
+        },
+      },
+    },
+  });
+
   return {
     rooms,
     room,
+    roomtype,
     booking,
     monthlyStats,
+    monthlyStatsRoomtype,
     checkin,
     checkout,
   };
@@ -82,6 +105,7 @@ async function GetData() {
 async function BackofficeMainPage() {
   const session = await getServerSession(authOptions);
   const data = await GetData();
+  // console.log(data.monthlyStatsRoomtype);
 
   const chartData = [
     {
@@ -129,6 +153,20 @@ async function BackofficeMainPage() {
     },
   ];
 
+  const roomtypeStats = data.roomtype.map((item) => {
+    const roomtype = item.id;
+    const roomtypeStats = data.monthlyStatsRoomtype.filter(
+      (room) => room.room.roomTypeId === roomtype
+    );
+    const name = data.roomtype.find((room) => room.id === roomtype)?.name;
+
+    return {
+      name,
+      roomtype,
+      stats: roomtypeStats.length,
+    };
+  });
+
   const filter = calculateMonthlyStats(data.monthlyStats);
 
   if (!session) {
@@ -158,6 +196,25 @@ async function BackofficeMainPage() {
       <div className="grid grid-cols-4 gap-4 my-2">
         <BookingChart data={filter} className="col-span-3" />
         <StatusChart data={chartData} />
+        <Card className="col-span-4 rounded-md">
+          <CardHeader>
+            <CardTitle>ประเภทห้อง</CardTitle>
+            <CardDescription>
+              รายงานเกี่ยวกับสถานะของประเภทห้องพักที่มีการจองในเดือนนี้
+            </CardDescription>
+            <CardContent className="p-0">
+              <div className="flex items-center space-x-2 text-sm">
+                {roomtypeStats.map((item, index) => (
+                  <div key={index} className="p-2 border rounded-md">
+                    <h1>
+                      {item.name} การจองทั้งหมด {item.stats} ครั้ง
+                    </h1>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </CardHeader>
+        </Card>
       </div>
     </PageWrapper>
   );

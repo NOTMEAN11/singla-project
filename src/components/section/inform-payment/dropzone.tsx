@@ -95,13 +95,12 @@ function Dropzone({ amount, bookingId }: Props) {
             key={file.name}
             className="≈ w-full h-64 border border-dashed flex items-center justify-center"
           >
-            <div className="relative w-64 h-64">
+            <div className="relative w-32 h-64">
               <Image
                 src={file.preview}
                 alt={file.name}
-                width={250}
-                height={250}
-                className="w-64 h-64 "
+                fill
+                className="object-contain "
               />
               <div
                 className="absolute top-[-4px] right-[-8px] p-0 text-white bg-red-500 rounded-full cursor-pointer"
