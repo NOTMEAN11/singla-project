@@ -25,51 +25,51 @@ export async function PATCH(
 ) {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
-    const coupon = await db.coupon.findUnique({
-      where: { id: params.id },
-    });
+  if (session) {
+    const body = await req.json();
+    const result = couponSchema.safeParse(body);
 
-    if (!coupon) return NextResponse.json("ไม่พบข้อมูลคูปอง", { status: 404 });
+    if (!result.success)
+      return NextResponse.json("กรอกข้อมูลให้ครบถ้วน", { status: 400 });
 
-    const totalCoupon = coupon.total === 0 ? 0 : coupon.total - 1;
-
-    const update = await db.coupon.update({
+    const coupon = await db.coupon.update({
       where: { id: params.id },
       data: {
-        total: totalCoupon,
+        ...result.data,
       },
     });
 
-    if (!update)
-      return NextResponse.json("เกิดข้อผิดพลาดในการใช้คูปอง", { status: 500 });
+    if (!coupon)
+      return NextResponse.json("เกิดข้อผิดพลาดในการอัพเดทคูปอง", {
+        status: 500,
+      });
 
     return NextResponse.json({
-      message: "ใช้คูปองสำเร็จ",
+      message: "อัพเดทคูปองสำเร็จ",
       status: "success",
     });
   }
 
-  const body = await req.json();
-  const result = couponSchema.safeParse(body);
+  const coupon = await db.coupon.findUnique({
+    where: { id: params.id },
+  });
 
-  if (!result.success)
-    return NextResponse.json("กรอกข้อมูลให้ครบถ้วน", { status: 400 });
+  if (!coupon) return NextResponse.json("ไม่พบข้อมูลคูปอง", { status: 404 });
 
-  const coupon = await db.coupon.update({
+  const totalCoupon = coupon.total === 0 ? 0 : coupon.total - 1;
+
+  const update = await db.coupon.update({
     where: { id: params.id },
     data: {
-      ...result.data,
+      total: totalCoupon,
     },
   });
 
-  if (!coupon)
-    return NextResponse.json("เกิดข้อผิดพลาดในการอัพเดทคูปอง", {
-      status: 500,
-    });
+  if (!update)
+    return NextResponse.json("เกิดข้อผิดพลาดในการใช้คูปอง", { status: 500 });
 
   return NextResponse.json({
-    message: "อัพเดทคูปองสำเร็จ",
+    message: "ใช้คูปองสำเร็จ",
     status: "success",
   });
 }

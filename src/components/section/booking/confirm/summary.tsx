@@ -84,6 +84,46 @@ function ConfirmSummary({ coupons, roomtype }: Props) {
 
   async function handleSubmit() {
     toast.loading("กำลังทำการจองห้องพัก");
+    if (!id) {
+      try {
+        const res = await fetch("/api/booking", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            roomtypeId: room,
+            checkIn: checkInDate,
+            checkOut: checkOutDate,
+            adults: guest?.adults,
+            children: guest?.children,
+            isBuffet: options?.buffet,
+            isPickup: options?.shuttle,
+            feePrice: fee,
+            discountPrice: discount,
+            totalPrice: getTotalPrice().price,
+            status: "pending",
+            request,
+          }),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          toast.success(data.message);
+          router.push("/booking?step=complete");
+        }
+
+        if (res.status === 404) {
+          toast.error(data.message);
+        }
+      } catch (error) {
+        toast.error("มีบางอย่างผิดพลาด โปรดลองใหม่อีกครั้ง");
+        console.log(error);
+      }
+    }
     try {
       const res = await fetch(`/api/promotions/coupon/${id}`, {
         method: "PATCH",
