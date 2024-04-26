@@ -255,20 +255,7 @@ function BookingInfo({ roomtype }: Props) {
             <p>{vatPrice}</p>
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-1">
-              <p>ค่าธรรมเนียม</p>
-              <HoverIcon
-                icon={<InfoIcon size={14} />}
-                content={
-                  <div>
-                    <p>
-                      รีสอร์ทขอบริการค่าประกันห้องพักเพื่อความปลอดภัยและการรักษาความสะอาดของห้องพัก
-                      ท่านลูกค้าสามารถเพิ่มความมั่นใจในการพักผ่อนได้โดยการชำระค่าประกันที่จะคืนให้หลังจากการเช็คเอาท์
-                    </p>
-                  </div>
-                }
-              />
-            </div>
+            <p>ค่าธรรมเนียม</p>
             <p>{feePrice}</p>
           </div>
         </div>
