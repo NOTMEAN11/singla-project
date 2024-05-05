@@ -34,13 +34,13 @@ async function BackofficeMainPage() {
         title="โปรโมชั่น"
         extra={
           <div className="flex space-x-2">
-            <Link
+            {/* <Link
               href="/backoffice/promotion/create"
               className={buttonVariants()}
             >
               <Plus size={14} className="mr-2" />
               สร้างโปรโมชั่น
-            </Link>
+            </Link> */}
             <CreateCouponDialog />
           </div>
         }
@@ -55,7 +55,7 @@ async function BackofficeMainPage() {
             <CouponSection />
           </CardContent>
         </Card>
-        <Card className="my-4">
+        {/* <Card className="my-4">
           <CardHeader>
             <CardTitle>เพจโปรโมชั่น</CardTitle>
             <CardDescription>
@@ -65,7 +65,7 @@ async function BackofficeMainPage() {
           <CardContent>
             <PromotionSection />
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
       {/* <Editor /> */}
     </PageWrapper>

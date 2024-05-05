@@ -143,7 +143,7 @@ function DataTable({ data, title, description }: DataTableProps) {
               <TableHead>ค่าธรรมเนียม</TableHead>
               <TableHead>ราคาสุทธิ</TableHead>
               <TableHead>ส่วนเสริม</TableHead>
-              <TableHead></TableHead>
+              <TableHead className="text-center">แจ้งเตือน</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -154,82 +154,104 @@ function DataTable({ data, title, description }: DataTableProps) {
                 </TableCell>
               </TableRow>
             )}
-            {data.booking.map((booking, index) => (
-              <TableRow key={booking.id}>
-                <TableCell>{(page - 1) * 10 + index + 1}</TableCell>
-                <TableCell>{booking.name}</TableCell>
-                <TableCell>{booking.email}</TableCell>
-                <TableCell>{booking.phone}</TableCell>
-                <TableCell>
-                  <Badge
-                    className={
-                      status.find((i) => i.value === booking.status)?.color
-                    }
-                  >
-                    {status.find((i) => i.value === booking.status)?.name}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  {booking.children === 0
-                    ? booking.adults + " คน"
-                    : `ผู้ใหญ่ ${booking.adults} และ ${booking.children} คน`}{" "}
-                </TableCell>
-                <TableCell>
-                  {format(new Date(booking.checkIn), "dd/MM/yyyy", {
-                    locale: th,
-                  })}
-                </TableCell>
-                <TableCell>
-                  {format(new Date(booking.checkOut), "dd/MM/yyyy", {
-                    locale: th,
-                  })}
-                </TableCell>
-                <TableCell>{THB(booking.discountPrice)}</TableCell>
-                <TableCell>{THB(booking.feePrice)}</TableCell>
-                <TableCell>{THB(booking.totalPrice)}</TableCell>
-                <TableCell className="space-x-2">
-                  {!booking.isBuffet && !booking.isPickup && (
-                    <Badge>ไม่มี</Badge>
-                  )}
-                  {booking.isBuffet ? <Badge>บุฟเฟ่ต์เช้า</Badge> : ""}
-                  {booking.isPickup ? <Badge>รถรับส่ง</Badge> : ""}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <Link href={`/backoffice/booking/${booking.id}`}>
-                      <Edit2 size={16} className="text-yellow-500" />
-                    </Link>
-                    <AlertDialog>
-                      <AlertDialogTrigger>
-                        <Trash2 size={14} className="text-red-500" />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            คุณต้องการลบห้องพักนี้หรือไม่?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            หากลบแล้วจะไม่สามารถกู้คืนได้อีก คุณแน่ใจหรือไม่?
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() =>
-                              fetch("/api/booking/" + data.booking[index].id, {
-                                method: "DELETE",
-                              })
-                            }
-                          >
-                            ตกลง
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+            {data.booking.map((booking, index) => {
+              const today = new Date().setHours(0, 0, 0, 0);
+              const todayDate = new Date(today);
+              const checkIn = new Date(booking.checkIn);
+              const daysDifference = Math.floor(
+                (checkIn.getTime() - todayDate.getTime()) /
+                  (1000 * 60 * 60 * 24)
+              );
+              const showDays = daysDifference > 0 ? daysDifference : 0;
+              const showDaysText =
+                showDays <= 3 && showDays != 0 ? (
+                  <Badge className="bg-red-500">{showDays} วัน</Badge>
+                ) : showDays > 5 || showDays === 0 ? (
+                  ""
+                ) : (
+                  <Badge className="bg-yellow-500">{showDays} วัน</Badge>
+                );
+              return (
+                <TableRow key={booking.id}>
+                  <TableCell>{(page - 1) * 10 + index + 1}</TableCell>
+                  <TableCell>{booking.name}</TableCell>
+                  <TableCell>{booking.email}</TableCell>
+                  <TableCell>{booking.phone}</TableCell>
+                  <TableCell>
+                    <Badge
+                      className={
+                        status.find((i) => i.value === booking.status)?.color
+                      }
+                    >
+                      {status.find((i) => i.value === booking.status)?.name}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {booking.children === 0
+                      ? booking.adults + " คน"
+                      : `ผู้ใหญ่ ${booking.adults} และ ${booking.children} คน`}{" "}
+                  </TableCell>
+                  <TableCell>
+                    {format(new Date(booking.checkIn), "dd/MM/yyyy", {
+                      locale: th,
+                    })}
+                  </TableCell>
+                  <TableCell>
+                    {format(new Date(booking.checkOut), "dd/MM/yyyy", {
+                      locale: th,
+                    })}
+                  </TableCell>
+                  <TableCell>{THB(booking.discountPrice)}</TableCell>
+                  <TableCell>{THB(booking.feePrice)}</TableCell>
+                  <TableCell>{THB(booking.totalPrice)}</TableCell>
+                  <TableCell className="space-x-2">
+                    {!booking.isBuffet && !booking.isPickup && (
+                      <Badge>ไม่มี</Badge>
+                    )}
+                    {booking.isBuffet ? <Badge>บุฟเฟ่ต์เช้า</Badge> : ""}
+                    {booking.isPickup ? <Badge>รถรับส่ง</Badge> : ""}
+                  </TableCell>
+                  <TableCell className="text-center">{showDaysText}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-2">
+                      <Link href={`/backoffice/booking/${booking.id}`}>
+                        <Edit2 size={16} className="text-yellow-500" />
+                      </Link>
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          <Trash2 size={14} className="text-red-500" />
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              คุณต้องการลบห้องพักนี้หรือไม่?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              หากลบแล้วจะไม่สามารถกู้คืนได้อีก คุณแน่ใจหรือไม่?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() =>
+                                fetch(
+                                  "/api/booking/" + data.booking[index].id,
+                                  {
+                                    method: "DELETE",
+                                  }
+                                )
+                              }
+                            >
+                              ตกลง
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </CardContent>
