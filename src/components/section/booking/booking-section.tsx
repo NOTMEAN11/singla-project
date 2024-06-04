@@ -51,6 +51,9 @@ function BookingSection({ roomtype }: Props) {
 
   const router = useRouter();
   const [rooms, setRooms] = useState<RoomResponse[]>([] as RoomResponse[]);
+  const [disabled, setDisabled] = useState<boolean>(false);
+
+  const capacity = roomtype.find((r) => r.id === room)?.capacity!;
 
   async function handleSubmit() {
     if (!room) {
@@ -88,6 +91,36 @@ function BookingSection({ roomtype }: Props) {
     router.push("/booking?step=details");
   }
 
+  function handleGuest(type: "adults" | "children", action: "add" | "remove") {
+    const adults = guest?.adults ? guest?.adults : 0;
+    const children = guest?.children ? guest?.children : 0;
+    const totalGuest = adults + children;
+
+    switch (action) {
+      case "add":
+        if (totalGuest < capacity) {
+          setGuest({
+            adults: type === "adults" ? guest?.adults! + 1 : guest?.adults!,
+            children:
+              type === "children" ? guest?.children! + 1 : guest?.children!,
+          });
+        }
+
+        break;
+      case "remove":
+        if (totalGuest > 0) {
+          setGuest({
+            adults: type === "adults" ? guest?.adults! - 1 : guest?.adults!,
+            children:
+              type === "children" ? guest?.children! - 1 : guest?.children!,
+          });
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
   function handleRoomType(value: string) {
     setRoom(value);
   }
@@ -115,10 +148,7 @@ function BookingSection({ roomtype }: Props) {
               variant="outline"
               className="w-6 h-6"
               onClick={() => {
-                setGuest({
-                  adults: guest?.adults! - 1,
-                  children: guest?.children!,
-                });
+                handleGuest("adults", "remove");
               }}
               disabled={guest?.adults === 0}
             >
@@ -129,11 +159,9 @@ function BookingSection({ roomtype }: Props) {
               variant="outline"
               className="w-6 h-6"
               onClick={() => {
-                setGuest({
-                  adults: guest?.adults! + 1,
-                  children: guest?.children!,
-                });
+                handleGuest("adults", "add");
               }}
+              disabled={disabled}
             >
               +
             </Button>
@@ -146,10 +174,7 @@ function BookingSection({ roomtype }: Props) {
               variant="outline"
               className="w-6 h-6"
               onClick={() => {
-                setGuest({
-                  adults: guest?.adults!,
-                  children: guest?.children! - 1,
-                });
+                handleGuest("children", "remove");
               }}
               disabled={guest?.children === 0}
             >
@@ -160,12 +185,9 @@ function BookingSection({ roomtype }: Props) {
               variant="outline"
               className="w-6 h-6"
               onClick={() => {
-                setGuest({
-                  adults: guest?.adults!,
-                  children: guest?.children! + 1,
-                });
+                handleGuest("children", "add");
               }}
-              disabled={guest?.adults === 0}
+              disabled={disabled}
             >
               +
             </Button>
@@ -174,6 +196,13 @@ function BookingSection({ roomtype }: Props) {
       </PopoverContent>
     </Popover>
   );
+
+  useEffect(() => {
+    if (!capacity) {
+      setGuest({ adults: 1, children: 0 });
+    }
+    setGuest({ adults: 1, children: 0 });
+  }, [capacity, setGuest]);
 
   useEffect(() => {
     async function fetchRooms(
@@ -260,15 +289,17 @@ function BookingSection({ roomtype }: Props) {
               <TableCaption>รายการห้องพัก</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-32">หมายเลขห้องพัก</TableHead>
-                  <TableHead>สถานะ</TableHead>
-                  <TableHead>ราคา</TableHead>
-                  <TableHead>จำนวนผู้เข้าพัก</TableHead>
+                  <TableHead className="w-32 text-center">
+                    ห้องพักที่ว่าง
+                  </TableHead>
+                  {/* <TableHead>สถานะ</TableHead> */}
+                  <TableHead className="text-center">ราคา</TableHead>
+                  <TableHead className="text-center">จำนวนผู้เข้าพัก</TableHead>
                   <TableHead>สิ่งอำนวยความสะดวก</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {rooms?.map((room) => (
+                {/* {rooms?.map((room) => (
                   <TableRow key={room.id}>
                     <TableCell className="font-medium">{room.name}</TableCell>
                     <TableCell>
@@ -333,7 +364,77 @@ function BookingSection({ roomtype }: Props) {
                       </ul>
                     </TableCell>
                   </TableRow>
-                ))}
+                ))} */}
+                <TableRow>
+                  <TableCell className="font-medium text-center">
+                    {rooms.length} ห้อง
+                  </TableCell>
+                  {/* <TableCell>
+                    {rooms[0].status === "available" && "ว่าง"}
+                  </TableCell> */}
+                  <TableCell className="text-center">
+                    {THB(rooms[0].roomType.price)} / คืน
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {rooms[0].roomType.capacity} คน
+                  </TableCell>
+                  <TableCell className="">
+                    <ul className="grid grid-cols-2 text-sm ">
+                      <li className="flex items-center space-x-1">
+                        <BiSquare />{" "}
+                        <span>
+                          ขนาดห้อง :{26 * rooms[0].roomType.capacity} ตร.ม
+                        </span>
+                      </li>
+
+                      <li className="flex items-center space-x-1">
+                        <BiShower /> <span>ผักบัวและอ่างอาบน้ำ</span>
+                      </li>
+                      <li className="flex items-center space-x-1">
+                        <BiSolidTShirt /> <span>ชุดคลุมอาบน้ำ</span>
+                      </li>
+                      <li className="flex items-center space-x-1">
+                        <Utensils size={14} />{" "}
+                        <span className="flex items-center space-x-1">
+                          บุฟเฟ่ต์เช้า (ไม่บังคับ)
+                          <HoverIcon
+                            icon={<InfoIcon size={14} className="ml-1" />}
+                            content={
+                              <div>
+                                <p>
+                                  บุฟเฟ่ต์เช้าของทางรีสอร์ทมีบริการให้เลือกหลากหลายเมนู
+                                  สำหรับลูกค้าที่ต้องการใช้บริการ
+                                  โปรดแจ้งล่วงหน้าเพื่อให้ทางรีสอร์ทได้จัดเตรียมให้
+                                  หรือสามารถเลือกได้ที่เคาน์เตอร์
+                                  โดยจะมีค่าบริการเพิ่มเติม 199 บาทต่อท่าน หรือ
+                                  99 บาทสำหรับเด็ก
+                                </p>
+                              </div>
+                            }
+                          />
+                        </span>
+                      </li>
+                      <li className="flex items-center space-x-1">
+                        <Utensils size={14} />{" "}
+                        <span className="flex items-center space-x-1">
+                          รถรับ-ส่งสนามบิน (ไม่บังคับ){" "}
+                          <HoverIcon
+                            icon={<InfoIcon size={14} className="ml-1" />}
+                            content={
+                              <div>
+                                <p>
+                                  มีบริการรถรับ-ส่งสนามบินสนามบินภูเก็ต
+                                  โดยจะมีค่าบริการเพิ่มเติม 300 บาทต่อท่าน
+                                  สำหรับเด็ก 150 บาทต่อท่าน
+                                </p>
+                              </div>
+                            }
+                          />
+                        </span>
+                      </li>
+                    </ul>
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           )}

@@ -166,7 +166,9 @@ function DataTable({ data, title, description }: DataTableProps) {
               const showDaysText =
                 showDays <= 3 && showDays != 0 ? (
                   <Badge className="bg-red-500">{showDays} วัน</Badge>
-                ) : showDays > 5 || showDays === 0 ? (
+                ) : showDays > 5 ? (
+                  <Badge className="bg-green-500">{showDays} วัน</Badge>
+                ) : showDays === 0 ? (
                   ""
                 ) : (
                   <Badge className="bg-yellow-500">{showDays} วัน</Badge>

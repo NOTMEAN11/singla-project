@@ -103,8 +103,11 @@ export async function POST(request: NextRequest) {
   }
 
   const verify = await verifySlip(file, amount, booking);
-
+  if (verify.status === `error`) {
+    return NextResponse.json(verify);
+  }
   await slipsUpload(file, booking);
+
   await db.booking.update({
     where: {
       id: bookingId as string,

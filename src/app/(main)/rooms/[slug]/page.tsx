@@ -45,13 +45,7 @@ async function Roompage({ params }: { params: { slug: string } }) {
         ]}
       />
       <ContainerWrapper className="flex flex-col items-center justify-center ">
-        <ImageSlider
-          images={[
-            "/assets/rooms/room1.2.jpg",
-            "/assets/rooms/room1.3.jpg",
-            "/assets/rooms/room1.jpg",
-          ]}
-        />
+        <ImageSlider images={room.image} />
         <div className="grid w-full max-w-2xl grid-cols-1 my-8 md:grid-cols-2 gad-4">
           <div>
             <h2 className="text-xl font-bold">{room.name}</h2>
